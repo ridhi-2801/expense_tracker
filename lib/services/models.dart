@@ -13,10 +13,21 @@ class Employee {
 }
 
 class Expense {
-  String category;
-  String subCategory;
-  double monthlyLimit;
+  Category category;
+  String description;
   String imageName;
   List usersAssigned;
   String status;
+  Expense({
+    this.category,
+    this.description,
+    this.imageName,
+    this.status,
+  });
+}
+
+class Category {
+  String name;
+  List expenses;
+  double monthlyLimit;
 }
