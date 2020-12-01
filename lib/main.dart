@@ -1,3 +1,5 @@
+import 'package:expense_tracker/confirmation.dart';
+import 'package:expense_tracker/scanReceipt.dart';
 import 'package:expense_tracker/screens/createExpense.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -16,6 +18,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -76,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CreateExpense(),
+              builder: (context) => ScanReceipt(),//CreateExpense
             ),
           ),
           child: Text('Create expense'),

@@ -63,8 +63,7 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "1.15.0-nullsafety.3"
+    version: "1.15.0-nullsafety.2"
   convert:
     dependency: transitive
     description:
@@ -79,9 +78,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
-=======
-    version: "1.15.0-nullsafety.2"
->>>>>>> 5f69f88dbe1d3a2469de38955bdacc5deebddba5
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -355,10 +351,5 @@ packages:
     source: hosted
     version: "2.1.0-nullsafety.2"
 sdks:
-<<<<<<< HEAD
-  dart: ">=2.10.0-110 <2.11.0"
-  flutter: ">=1.20.0 <2.0.0"
-=======
   dart: ">=2.10.0-0.0.dev <2.10.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
->>>>>>> 5f69f88dbe1d3a2469de38955bdacc5deebddba5
+  flutter: ">=1.20.0 <2.0.0"
