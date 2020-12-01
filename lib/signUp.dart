@@ -1,7 +1,13 @@
 import 'package:expense_tracker/signIn.dart';
 import 'package:flutter/material.dart';
+import 'services/db.dart';
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
+  @override
+  _SignUpState createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -14,7 +20,7 @@ class SignUp extends StatelessWidget {
               gradient: LinearGradient(
                   colors: [Color(0xff008DFF), Color(0xff083EF6)])),
           child: Padding(
-            padding: const EdgeInsets.only(top: 108.0),
+            padding: const EdgeInsets.only(top: 100.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +49,7 @@ class SignUp extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 80),
+                  padding: const EdgeInsets.only(top: 60),
                   child: Container(
                     height: height / 1.475,
                     decoration: BoxDecoration(
@@ -54,11 +60,33 @@ class SignUp extends StatelessWidget {
                     ),
                     child: Padding(
                       padding:
-                          const EdgeInsets.only(left: 26.0, right: 16, top: 60),
+                          const EdgeInsets.only(left: 26.0, right: 16, top: 50),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text(
+                            "Employeee Name",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: width / 25,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          TextField(
+                            keyboardType: TextInputType.name,
+                            decoration: InputDecoration(
+                                suffixIcon: Icon(
+                                  Icons.check,
+                                  color: Colors.grey,
+                                ),
+                                border: new UnderlineInputBorder(
+                                    borderSide: new BorderSide(
+                                        color: Color(0xff083EF6))),
+                                hintText: "Enter Employee Name"),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           Text(
                             "Employeee id",
                             style: TextStyle(
@@ -103,7 +131,7 @@ class SignUp extends StatelessWidget {
                           SizedBox(
                             height: 20,
                           ),
-                          Text(
+                         /* Text(
                             "Confirm Password",
                             style: TextStyle(
                                 color: Colors.black,
@@ -121,6 +149,54 @@ class SignUp extends StatelessWidget {
                                     borderSide: new BorderSide(
                                         color: Color(0xff083EF6))),
                                 hintText: "Enter Password"),
+                          ),*/
+                          Text(
+                            "User Category",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: width / 25,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          DropdownButton(
+                            value: "Admin",
+                            hint: Text("User Catergory"),
+                            style: TextStyle(
+                              color: Color.fromRGBO(38, 50, 56, 0.30),
+                              fontSize: 15.0,
+                              fontFamily: "Gilroy",
+                            ),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.black45,
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                //itemCategory = value == "Veg" ? true : false;
+                              });
+                            },
+                            items: [
+                              DropdownMenuItem(
+                                value: "Admin",
+                                child: Text(
+                                  "Admin",
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: "checker",
+                                child: Text(
+                                  "checker",
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: "User",
+                                child: Text(
+                                  "User",
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(
                             height: 20,
@@ -133,10 +209,10 @@ class SignUp extends StatelessWidget {
                                 fontSize: width / 25),
                           ),
                           SizedBox(
-                            height: 40,
+                            height: 20,
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: const EdgeInsets.only(top:16.0,left: 16,right: 16,bottom: 8),
                             child: Container(
                               height: 60,
                               decoration: BoxDecoration(

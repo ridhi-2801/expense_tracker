@@ -1,6 +1,7 @@
 import 'package:expense_tracker/confirmation.dart';
 import 'package:expense_tracker/scanReceipt.dart';
 import 'package:expense_tracker/screens/createExpense.dart';
+import 'package:expense_tracker/signUp.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -79,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ScanReceipt(),//CreateExpense
+              builder: (context) => CreateExpense()
             ),
           ),
           child: Text('Create expense'),
