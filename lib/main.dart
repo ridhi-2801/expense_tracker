@@ -1,7 +1,7 @@
-import 'package:expense_tracker/screens/signUp.dart';
 import 'package:expense_tracker/screens/singIn.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
       ],
-      home: HomeScreen(),
+      home: SignIn(),
     );
   }
 }
@@ -53,24 +53,17 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             FlatButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SignUp(),
-                ),
-              ),
-              child: Text('Register'),
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SignIn(),
+                  ),
+                );
+              },
+              child: Text('Logout'),
               color: Colors.red[300],
-            ),
-            FlatButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SignIn(),
-                ),
-              ),
-              child: Text('Sign In'),
-              color: Colors.amber[300],
             ),
           ],
         ),
