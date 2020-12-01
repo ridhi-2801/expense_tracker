@@ -1,7 +1,6 @@
-import 'package:expense_tracker/signUp.dart';
 import 'package:flutter/material.dart';
 
-class Sign_In extends StatelessWidget {
+class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -25,7 +24,7 @@ class Sign_In extends StatelessWidget {
               SizedBox(height: 10,),
               Padding(
                 padding: const EdgeInsets.only(left:16.0),
-                child: Text("Sign In",style: TextStyle(color: Colors.white,fontSize: width/14 ,fontWeight: FontWeight.bold),),
+                child: Text("Sign Up",style: TextStyle(color: Colors.white,fontSize: width/14 ,fontWeight: FontWeight.bold),),
               ),
               Padding(
                 padding: const EdgeInsets.only(top:80),
@@ -43,19 +42,34 @@ class Sign_In extends StatelessWidget {
                       children: [
                         Text("Employeee id",style: TextStyle(color: Colors.black,fontSize: width/25,fontWeight: FontWeight.bold),),
                         TextField(
-                           decoration: InputDecoration(
-                             suffixIcon: Icon(Icons.check,color: Colors.grey,),
-                               border: new UnderlineInputBorder(
-                                   borderSide: new BorderSide(
-                                       color: Color(0xff083EF6)
-                                   )
-                               ),
-                             hintText: "Enter Employee id"
+                          decoration: InputDecoration(
+                              suffixIcon: Icon(Icons.check,color: Colors.grey,),
+                              border: new UnderlineInputBorder(
+                                  borderSide: new BorderSide(
+                                      color: Color(0xff083EF6)
+                                  )
+                              ),
+                              hintText: "Enter Employee id"
 
-                           ),
+                          ),
                         ),
                         SizedBox(height: 20,),
                         Text("Password",style: TextStyle(color: Colors.black,fontSize: width/25,fontWeight: FontWeight.bold),),
+                        TextField(
+                          obscureText: true,
+                          decoration: InputDecoration(
+                              suffixIcon: Icon(Icons.remove_red_eye,color: Colors.grey,),
+                              border: new UnderlineInputBorder(
+                                  borderSide: new BorderSide(
+                                      color: Color(0xff083EF6)
+                                  )
+                              ),
+                              hintText: "Enter Password"
+
+                          ),
+                        ),
+                        SizedBox(height: 20,),
+                        Text("Confirm Password",style: TextStyle(color: Colors.black,fontSize: width/25,fontWeight: FontWeight.bold),),
                         TextField(
                           obscureText: true,
                           decoration: InputDecoration(
@@ -75,14 +89,14 @@ class Sign_In extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Container(height: 60,
-                          decoration: BoxDecoration(color: Color(0xff083EF6),
-                          borderRadius: BorderRadius.circular(10)),
+                            decoration: BoxDecoration(color: Color(0xff083EF6),
+                                borderRadius: BorderRadius.circular(10)),
                             child: Padding(
                               padding: const EdgeInsets.only(left:16.0,right: 16),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Sign In",style: TextStyle(color: Colors.white,fontWeight:FontWeight.bold,fontSize: width/25),),
+                                  Text("Sign Up",style: TextStyle(color: Colors.white,fontWeight:FontWeight.bold,fontSize: width/25),),
                                   Icon(Icons.arrow_forward,color: Colors.white,)
                                 ],
                               ),
@@ -90,22 +104,17 @@ class Sign_In extends StatelessWidget {
                           ),
 
                         ),
-                       Center(
-                         child: GestureDetector(
-                           onTap: (){
-                             Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp()));
-                           },
-                           child: RichText(
-                             text: TextSpan(
-                               text: "Don't have Account?",
-                               style: TextStyle(color: Colors.black,fontSize: width/27),
-                             children:<TextSpan> [
-                               TextSpan(text: " Sign Up",style:TextStyle(color:  Color(0xff083EF6),fontSize: width/27,fontWeight: FontWeight.bold))
-                             ]),
+                        Center(
+                          child: RichText(
+                            text: TextSpan(
+                                text: "Already have Account?",
+                                style: TextStyle(color: Colors.black,fontSize: width/27),
+                                children:<TextSpan> [
+                                  TextSpan(text: " Sign In",style:TextStyle(color:  Color(0xff083EF6),fontSize: width/27,fontWeight: FontWeight.bold))
+                                ]),
 
-                           ),
-                         ),
-                       ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
