@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:expense_tracker/services/db.dart';
+import 'package:expense_tracker/services/models.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateExpense extends StatefulWidget {
   CreateExpense({Key key}) : super(key: key);
@@ -11,21 +15,27 @@ class CreateExpense extends StatefulWidget {
 class _CreateExpenseState extends State<CreateExpense> {
   List<String> categories = new List<String>();
   List<String> tags = new List<String>();
+  List<String> chosenTags = new List<String>();
   DatabaseService databaseService = new DatabaseService();
-  String category, tag;
+  String category;
+  GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+  int size = 1;
+  bool hasImage = false;
+  TextEditingController amountController = new TextEditingController();
+  TextEditingController descController = new TextEditingController();
+  File _image;
+  final picker = ImagePicker();
 
   @override
   void initState() {
-    getCategories();
-    getTags();
     super.initState();
   }
 
-  void getCategories() async {
+  Future<void> getCategories() async {
     categories = await databaseService.getAllCategories();
   }
 
-  void getTags() async {
+  Future<void> getTags() async {
     tags = await databaseService.getAllTags();
   }
 
@@ -35,81 +45,179 @@ class _CreateExpenseState extends State<CreateExpense> {
       appBar: AppBar(
         title: Text('Create expense'),
       ),
-      body: Container(
-        padding: EdgeInsets.all(20),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: [
-            DropdownButtonFormField(
-              hint: Text('Select tag'),
-              items: tags.map((String tag) {
-                return new DropdownMenuItem(
-                  value: tag,
-                  child: Text(tag),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  tag = value;
-                });
-              },
-            ),
-            DropdownButtonFormField(
-              hint: Text('Select category'),
-              items: categories.map((String category) {
-                return new DropdownMenuItem(
-                  value: category,
-                  child: Text(category),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  category = value;
-                });
-              },
-            ),
-            TextFormField(
-              // controller: password,
-              decoration: InputDecoration(labelText: 'Description'),
-            ),
-            TextFormField(
-              // controller: password,
-              decoration: InputDecoration(labelText: 'Amount'),
-              keyboardType: TextInputType.number,
-            ),
-
-            // FlatButton(
-            //   onPressed: () async {
-            //     await authService.signUp(
-            //       email.text,
-            //       password.text,
-            //       context,
-            //     );
-            //     Employee employee = new Employee(
-            //       id: id.text,
-            //       name: name.text,
-            //       email: email.text,
-            //       role: role,
-            //     );
-            //     databaseService.updateUserData(employee);
-            //     if (authService.user != null) {
-            //       print('Registered');
-            //       Navigator.pushAndRemoveUntil(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => HomeScreen(),
-            //         ),
-            //         (route) => false,
-            //       );
-            //     }
-            //   },
-            //   child: Text('Register'),
-            //   color: Colors.red[300],
-            // ),
-          ],
-        ),
+      body: FutureBuilder(
+        future: Future.wait<void>([getCategories(), getTags()]),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (categories.isNotEmpty && tags.isNotEmpty) {
+            return Container(
+              padding: EdgeInsets.all(20),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  children: [
+                    Row(
+                      children: [
+                        for (var x in chosenTags)
+                          Container(
+                            padding: EdgeInsets.only(right: 18),
+                            child: InputChip(
+                              label: Text(x),
+                              onDeleted: () {
+                                setState(() {
+                                  chosenTags.remove(x);
+                                });
+                              },
+                            ),
+                          ),
+                      ],
+                    ),
+                    for (var i = 0; i < size; i++) tagWidget(),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: FlatButton(
+                        padding: EdgeInsets.all(0),
+                        onPressed: () {
+                          setState(() {
+                            size++;
+                          });
+                        },
+                        child: Text(
+                          'Add new tag +',
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ),
+                    DropdownButtonFormField(
+                      hint: Text('Select category'),
+                      items: categories.map((String cat) {
+                        return new DropdownMenuItem(
+                          value: cat,
+                          child: Text(cat),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          category = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (category == null) {
+                          return 'Select a category';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: descController,
+                      decoration: InputDecoration(labelText: 'Description'),
+                    ),
+                    TextFormField(
+                      controller: amountController,
+                      decoration: InputDecoration(labelText: 'Amount'),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Amount cannot be empty';
+                        }
+                        return null;
+                      },
+                    ),
+                    CheckboxListTile(
+                      controlAffinity: ListTileControlAffinity.leading,
+                      title: Text('Any attachments?'),
+                      value: hasImage,
+                      onChanged: (value) {
+                        setState(() {
+                          hasImage = value;
+                        });
+                      },
+                    ),
+                    _image != null ? Image.file(_image) : Container(),
+                    FlatButton(
+                      onPressed: hasImage && _image == null
+                          ? () async {
+                              await getImage();
+                              hasImage = false;
+                            }
+                          : () {
+                              if (formKey.currentState.validate()) {
+                                Expense expense = new Expense(
+                                  category: category,
+                                  amount: double.parse(amountController.text),
+                                  description: descController.text ?? '',
+                                  tags: chosenTags,
+                                );
+                              }
+                            },
+                      child: Text(
+                        hasImage ? 'Click image' : 'Proceed',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.pink[300],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
+  }
+
+  Column tagWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 36,
+        ),
+
+        Text('Tags'),
+        DropdownButtonFormField(
+          validator: (value) {
+            if (chosenTags.isEmpty) {
+              return 'Select atlease 1 tag';
+            }
+            return null;
+          },
+          hint: Text('Select Tag'),
+          items: tags.map((String value) {
+            return new DropdownMenuItem<String>(
+              value: value,
+              child: new Text(value),
+            );
+          }).toList(),
+          // value: 'Select',
+          onChanged: (value) {
+            setState(() {
+              if (!chosenTags.contains(value)) {
+                chosenTags.add(value);
+                // categories.remove(value);
+              }
+            });
+          },
+        ),
+        // FlatButton(onPressed: null, child: null)
+      ],
+    );
+  }
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
   }
 }

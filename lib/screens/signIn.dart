@@ -1,4 +1,5 @@
 import 'package:expense_tracker/homePage.dart';
+import 'package:expense_tracker/main.dart';
 import 'package:flutter/material.dart';
 
 import '../services/auth.dart';
@@ -151,7 +152,7 @@ class _SignInState extends State<SignIn> {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => HomePage(),
+                                    builder: (context) => HomeScreen(),
                                   ),
                                   (route) => false,
                                 );
