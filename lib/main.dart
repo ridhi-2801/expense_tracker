@@ -1,6 +1,8 @@
 import 'package:expense_tracker/confirmation.dart';
 import 'package:expense_tracker/scanReceipt.dart';
+import 'package:expense_tracker/screens/createCategory.dart';
 import 'package:expense_tracker/screens/createExpense.dart';
+import 'package:expense_tracker/screens/createTag.dart';
 import 'package:expense_tracker/signUp.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -76,15 +78,40 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: Center(
-        child: FlatButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateExpense()
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FlatButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateCategory()
+                ),
+              ),
+              child: Text('Create Category'),
+              color: Colors.red[300],
             ),
-          ),
-          child: Text('Create expense'),
-          color: Colors.red[300],
+            FlatButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateTag()
+                ),
+              ),
+              child: Text('Create tag'),
+              color: Colors.red[300],
+            ),
+            FlatButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateExpense()
+                ),
+              ),
+              child: Text('Create expense'),
+              color: Colors.red[300],
+            ),
+          ],
         ),
       ),
     );
