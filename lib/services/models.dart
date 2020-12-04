@@ -4,7 +4,6 @@ class Employee {
   String role;
   String email;
   List expensesAssigned;
-  String category;
   Employee({
     this.id,
     this.name,
@@ -17,7 +16,6 @@ class Employee {
     role = data['Employee role'];
     name = data['Employee name'];
     expensesAssigned = data['Expenses'];
-    category = data['Assigned category'];
   }
 }
 

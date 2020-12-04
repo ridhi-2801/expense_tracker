@@ -1,5 +1,6 @@
 import 'package:expense_tracker/homePage.dart';
 import 'package:expense_tracker/main.dart';
+import 'package:expense_tracker/screens/signUp.dart';
 import 'package:flutter/material.dart';
 
 import '../services/auth.dart';
@@ -21,7 +22,7 @@ class _SignInState extends State<SignIn> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(),
+            builder: (context) => HomeScreen(),
           ),
         );
       }
@@ -189,21 +190,31 @@ class _SignInState extends State<SignIn> {
                           ),
                         ),
                         Center(
-                          child: RichText(
-                            text: TextSpan(
-                              text: "Don't have Account?",
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: width / 27),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: " Sign Up",
-                                  style: TextStyle(
-                                    color: Color(0xff083EF6),
-                                    fontSize: width / 27,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              ],
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignUp(),
+                                ),
+                              );
+                            },
+                            child: RichText(
+                              text: TextSpan(
+                                text: "Don't have Account?",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: width / 27),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: " Sign Up",
+                                    style: TextStyle(
+                                      color: Color(0xff083EF6),
+                                      fontSize: width / 27,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),

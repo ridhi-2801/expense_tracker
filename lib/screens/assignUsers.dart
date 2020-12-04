@@ -1,43 +1,41 @@
-import 'package:expense_tracker/main.dart';
 import 'package:expense_tracker/services/db.dart';
 import 'package:expense_tracker/services/models.dart';
 import 'package:flutter/material.dart';
 
-class CreateCategory extends StatefulWidget {
-  CreateCategory({Key key}) : super(key: key);
+import '../main.dart';
+
+class AssignUsers extends StatefulWidget {
+  AssignUsers({Key key}) : super(key: key);
 
   @override
-  _CreateCategoryState createState() => _CreateCategoryState();
+  _AssignUsersState createState() => _AssignUsersState();
 }
 
-class _CreateCategoryState extends State<CreateCategory> {
+class _AssignUsersState extends State<AssignUsers> {
   List<String> users = new List<String>();
   DatabaseService databaseService = new DatabaseService();
   List<String> chosenUsers = new List<String>();
+  String category;
   int size = 1;
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
-  TextEditingController nameController = new TextEditingController();
-  TextEditingController amountController = new TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<void> fetchUsers() async {
-    users = await databaseService.getAllIds();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Category'),
+        title: Text('Assign Users'),
       ),
       body: FutureBuilder(
-        future: fetchUsers(),
-        builder: (context, snapshot) {
-          if (users.isNotEmpty) {
+        future: users.isEmpty
+            ? Future.wait([
+                databaseService.getAllCategories(),
+                databaseService.getAllIds(),
+              ])
+            : null,
+        builder: (context, AsyncSnapshot<List<List<String>>> snap) {
+          if (snap.hasData) {
+            if (users.isEmpty) {
+              users = snap.data.elementAt(1);
+            }
             return Container(
               padding: EdgeInsets.all(20),
               width: MediaQuery.of(context).size.width,
@@ -46,31 +44,28 @@ class _CreateCategoryState extends State<CreateCategory> {
                 key: formKey,
                 child: Column(
                   children: [
-                    TextFormField(
-                      controller: nameController,
-                      decoration: InputDecoration(labelText: 'Category name'),
+                    DropdownButtonFormField(
                       validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Name cannot be empty';
-                        } else {
-                          return null;
+                        if (category == null) {
+                          return 'Select atlease 1 category';
                         }
+                        return null;
+                      },
+                      hint: Text('Select Category'),
+                      items: snap.data.first.map((String value) {
+                        return new DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value),
+                        );
+                      }).toList(),
+                      // value: 'Select',
+                      onChanged: (value) {
+                        setState(() {
+                          category = value;
+                        });
                       },
                     ),
-                    TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      controller: amountController,
-                      decoration: InputDecoration(labelText: 'Monthly limit'),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Amount cannot be empty';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    for (var i = 0; i < size; i++) categoryWidget(),
+                    for (var i = 0; i < size; i++) userWidget(),
                     Align(
                       alignment: Alignment.topLeft,
                       child: FlatButton(
@@ -89,12 +84,18 @@ class _CreateCategoryState extends State<CreateCategory> {
                     FlatButton(
                       onPressed: () async {
                         if (formKey.currentState.validate()) {
-                          Category category = new Category(
-                            name: nameController.text,
-                            monthlyLimit: double.parse(amountController.text),
-                            users: chosenUsers,
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            },
                           );
-                          await databaseService.addCategoryData(category);
+                          await databaseService.addUsersToCategory(
+                              chosenUsers, category);
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
@@ -105,7 +106,7 @@ class _CreateCategoryState extends State<CreateCategory> {
                         }
                       },
                       child: Text(
-                        'Add category',
+                        'Assign users',
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.purple[400],
@@ -113,11 +114,6 @@ class _CreateCategoryState extends State<CreateCategory> {
                   ],
                 ),
               ),
-            );
-          } else if (users.isEmpty &&
-              snapshot.connectionState == ConnectionState.done) {
-            return Center(
-              child: Text('No user has any unassinged category'),
             );
           } else {
             return Center(
@@ -129,7 +125,7 @@ class _CreateCategoryState extends State<CreateCategory> {
     );
   }
 
-  Column categoryWidget() {
+  Column userWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

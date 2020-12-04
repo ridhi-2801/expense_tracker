@@ -1,10 +1,12 @@
 import 'package:expense_tracker/confirmation.dart';
+import 'package:expense_tracker/homePage.dart';
 import 'package:expense_tracker/scanReceipt.dart';
 import 'package:expense_tracker/screens/approverHomePage.dart';
+import 'package:expense_tracker/screens/assignUsers.dart';
 import 'package:expense_tracker/screens/createCategory.dart';
 import 'package:expense_tracker/screens/createExpense.dart';
 import 'package:expense_tracker/screens/createTag.dart';
-import 'package:expense_tracker/signUp.dart';
+import 'package:expense_tracker/screens/signUp.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -109,6 +111,14 @@ class _HomeScreenState extends State<HomeScreen> {
             FlatButton(
               onPressed: () => Navigator.push(
                 context,
+                MaterialPageRoute(builder: (context) => AssignUsers()),
+              ),
+              child: Text('Assign users to category'),
+              color: Colors.red[300],
+            ),
+            FlatButton(
+              onPressed: () => Navigator.push(
+                context,
                 MaterialPageRoute(builder: (context) => CreateTag()),
               ),
               child: Text('Create tag'),
@@ -128,6 +138,30 @@ class _HomeScreenState extends State<HomeScreen> {
                 MaterialPageRoute(builder: (context) => ApproverDashboard()),
               ),
               child: Text('Approver homepage'),
+              color: Colors.red[300],
+            ),
+            FlatButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              ),
+              child: Text('Homepage'),
+              color: Colors.red[300],
+            ),
+            FlatButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ScanReceipt()),
+              ),
+              child: Text('Scan Receipt'),
+              color: Colors.red[300],
+            ),
+            FlatButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Confirmation()),
+              ),
+              child: Text('Confirmation'),
               color: Colors.red[300],
             ),
           ],

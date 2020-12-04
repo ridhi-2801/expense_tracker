@@ -1,21 +1,37 @@
+import 'package:expense_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class Confirmation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left:30.0,right: 30,bottom: 50),
-        child: Container(
-          height: 60,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Color(0xff083EF6), )
+        padding: const EdgeInsets.only(left: 30.0, right: 30, bottom: 50),
+        child: FlatButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(),
+              ),
+              (route) => false,
+            );
+          },
+          child: Container(
+            height: 60,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Color(0xff083EF6),
+                )),
+            child: Center(
+              child: Text(
+                "Confirm",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+            ),
           ),
-          child: Center(child: Text("Confirm",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)),
         ),
       ),
       body: Column(
@@ -55,7 +71,6 @@ class Confirmation extends StatelessWidget {
               )
             ],
           )),
-
         ],
       ),
     );

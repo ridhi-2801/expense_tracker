@@ -15,31 +15,31 @@ class DatabaseService {
     DocumentReference docRef = userRef.doc(employee.id);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setString('Id', employee.id);
-    await sharedPreferences.setString('Category', employee.category);
-    await FirebaseFirestore.instance.collection('names').doc('uids').update(
-      {
-        'uids': FieldValue.arrayUnion([
-          employee.id,
-        ])
-      },
-    );
-    await FirebaseFirestore.instance
-        .collection('names')
-        .doc('unassigned')
-        .update(
-      {
-        'uids': FieldValue.arrayUnion([
-          employee.id,
-        ]),
-      },
-    );
+    try {
+      await FirebaseFirestore.instance.collection('names').doc('uids').update(
+        {
+          'uids': FieldValue.arrayUnion([
+            employee.id,
+          ])
+        },
+      );
+    } on FirebaseException catch (e) {
+      print(e.code);
+
+      await FirebaseFirestore.instance.collection('names').doc('uids').set(
+        {
+          'uids': [
+            employee.id,
+          ]
+        },
+      );
+    }
     return await docRef.set(
       {
         'Employee Id': employee.id,
         'Employee name': employee.name,
         'Employee role': employee.role,
         'Employee email': employee.email,
-        'Assigned category': [],
         'Expenses': [],
       },
       SetOptions(merge: true),
@@ -65,35 +65,46 @@ class DatabaseService {
   }
 
   Future<List<String>> getAllTags() async {
-    final DocumentSnapshot ref =
-        await FirebaseFirestore.instance.collection('names').doc('tags').get();
-    List<String> tags = new List();
-    tags = List<String>.from(ref.data()['tags']);
-    return tags;
-  }
-
-  Future<List<String>> getUnassinedUsers() async {
-    final DocumentSnapshot ref = await FirebaseFirestore.instance
-        .collection('names')
-        .doc('unassigned')
-        .get();
-    List<String> uids = List<String>.from(ref.data()['uids']);
-    return uids;
+    try {
+      final DocumentSnapshot ref = await FirebaseFirestore.instance
+          .collection('names')
+          .doc('tags')
+          .get();
+      List<String> tags = new List();
+      tags = List<String>.from(ref.data()['tags']);
+      return tags;
+    } catch (e) {
+      print(e);
+      return List<String>.empty(growable: true);
+    }
   }
 
   Future<void> addCategoryData(Category category) async {
     final DocumentReference docref = categoryRef.doc(category.name);
-    await FirebaseFirestore.instance
-        .collection('names')
-        .doc('categories')
-        .update(
-      {
-        'categories': FieldValue.arrayUnion([
-          category.name,
-        ]),
-      },
-    );
-    await docref.set(
+    try {
+      await FirebaseFirestore.instance
+          .collection('names')
+          .doc('categories')
+          .update(
+        {
+          'categories': FieldValue.arrayUnion([
+            category.name,
+          ]),
+        },
+      );
+    } catch (e) {
+      await FirebaseFirestore.instance
+          .collection('names')
+          .doc('categories')
+          .set(
+        {
+          'categories': [
+            category.name,
+          ],
+        },
+      );
+    }
+    return await docref.set(
       {
         'Name': category.name,
         'Users': category.users,
@@ -102,31 +113,36 @@ class DatabaseService {
       },
       SetOptions(merge: true),
     );
-    await FirebaseFirestore.instance
-        .collection('names')
-        .doc('unassigned')
-        .update({
-      'uids': FieldValue.arrayRemove(category.users),
-    });
-    for (var user in category.users) {
-      await userRef.doc(user).update(
-        {
-          'Assigned category': FieldValue.arrayUnion([category.name]),
-        },
-      );
-    }
+  }
+
+  Future<void> addUsersToCategory(
+      List<String> users, String categoryName) async {
+    final DocumentReference docref = categoryRef.doc(categoryName);
+    return await docref.update(
+      {
+        'Users': FieldValue.arrayUnion(users),
+      },
+    );
   }
 
   Future<void> addTagData(Tag tag) async {
     final CollectionReference tagsRef =
         FirebaseFirestore.instance.collection('names');
-    return await tagsRef.doc('tags').update(
-      {
-        'tags': FieldValue.arrayUnion(
-          [tag.tagName],
-        ),
-      },
-    );
+    try {
+      return await tagsRef.doc('tags').update(
+        {
+          'tags': FieldValue.arrayUnion(
+            [tag.tagName],
+          ),
+        },
+      );
+    } catch (e) {
+      return await tagsRef.doc('tags').set(
+        {
+          'tags': [tag.tagName],
+        },
+      );
+    }
   }
 
   Future<String> addExpense(Expense expense) async {

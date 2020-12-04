@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:expense_tracker/main.dart';
+import 'package:expense_tracker/confirmation.dart';
 import 'package:expense_tracker/services/db.dart';
 import 'package:expense_tracker/services/models.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -141,8 +140,16 @@ class _CreateExpenseState extends State<CreateExpense> {
                             }
                           : () async {
                               if (formKey.currentState.validate()) {
-                                Category temp = await databaseService
-                                    .readCategory(category);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  },
+                                );
                                 Expense expense = new Expense(
                                   category: category,
                                   amount: double.parse(amountController.text),
@@ -150,18 +157,19 @@ class _CreateExpenseState extends State<CreateExpense> {
                                   tags: chosenTags,
                                   hasImage: hasImage,
                                 );
-                                String id = await databaseService.addExpense(expense);
+                                String id =
+                                    await databaseService.addExpense(expense);
                                 if (_image != null) {
                                   await FirebaseStorage.instance
                                       .ref(id)
                                       .putFile(_image);
                                 }
-                                Navigator.pushAndRemoveUntil(
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => HomeScreen(),
+                                    builder: (context) => Confirmation(),
                                   ),
-                                  (route) => false,
                                 );
                               }
                             },

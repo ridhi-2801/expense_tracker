@@ -9,26 +9,26 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       bottomNavigationBar: Container(
-        height: height/4.5,
+        height: height / 4.5,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView(
             children: [
-              Text("New Expenses", style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold),),
-              SizedBox(height: 20,),
+              Text(
+                "New Expenses",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               ExpenseCards(height: height, width: width),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               ExpenseCards(height: height, width: width)
             ],
           ),
@@ -90,28 +90,41 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 16),
                   child: Container(
-                      width: width/1.05,
-                      height: height/2,
+                      width: width / 1.05,
+                      height: height / 2,
                       decoration: BoxDecoration(
-                        boxShadow: [new BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 20.0,
-                        ),],
+                        boxShadow: [
+                          new BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 20.0,
+                          ),
+                        ],
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.only(
-                          top: 36.0, left: 26, bottom: 16,),
+                          top: 36.0,
+                          left: 26,
+                          bottom: 16,
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Create Expenses", style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),),
-                            SizedBox(height: 20,),
-                            Text("Category", style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),),
+                            Text(
+                              "Create Expenses",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Category",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
                             DropdownButton(
                               value: "Carpentry",
                               hint: Text("User Catergory"),
@@ -153,47 +166,63 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20,),
-                            Text("Expenses Amount", style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Expenses Amount",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
                             Container(
                               width: width / 2,
                               child: TextField(
-                                decoration: InputDecoration(
-                                    hintText: "Enter Amount"
-                                ),
+                                decoration:
+                                    InputDecoration(hintText: "Enter Amount"),
                               ),
                             ),
-                            SizedBox(height: 20,),
-                            Text("Upload Receipt", style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),),
-
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Upload Receipt",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text("+ upload image", style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xff083EF6)),),
+                              child: Text(
+                                "+ upload image",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xff083EF6)),
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Container(
                                 height: 45,
-                                width: width/1.4,
+                                width: width / 1.4,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: Color(0xff083EF6),
                                 ),
                                 child: Center(
-                                  child: Text("Create",style: TextStyle(fontSize: 20,color: Colors.white,
-                                      fontWeight: FontWeight.bold),),
+                                  child: Text(
+                                    "Create",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
                               ),
                             )
                           ],
                         ),
-                      )
-                  ),
+                      )),
                 ),
               ),
             ],
@@ -217,11 +246,12 @@ class ExpenseCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height/7,
+      height: height / 7,
       width: width,
       decoration: BoxDecoration(
         border: Border(
-          left: BorderSide( //                   <--- left side
+          left: BorderSide(
+            //                   <--- left side
             color: Colors.redAccent,
             width: 10.0,
           ),
@@ -231,22 +261,38 @@ class ExpenseCards extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Column(
-            mainAxisAlignment:MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image(image: AssetImage("images/carpentort.png")),
-              Image(image: AssetImage("images/carpentorb.png"))
+              // Image(image: AssetImage("images/carpentort.png")),
+              // Image(image: AssetImage("images/carpentorb.png"))
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text("28/Nov/2020",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 18),),
-              Text("Carpentry",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-              Text("₹ 2500",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+              Text(
+                "28/Nov/2020",
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+              ),
+              Text(
+                "Carpentry",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              Text(
+                "₹ 2500",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
             ],
           ),
-          Text("Approved",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23,color:Color(0xff083EF6), ),),
+          Text(
+            "Approved",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 23,
+              color: Color(0xff083EF6),
+            ),
+          ),
         ],
       ),
     );
