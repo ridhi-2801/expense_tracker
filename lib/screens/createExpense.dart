@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:expense_tracker/main.dart';
 import 'package:expense_tracker/services/db.dart';
 import 'package:expense_tracker/services/models.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -31,11 +33,8 @@ class _CreateExpenseState extends State<CreateExpense> {
     super.initState();
   }
 
-  Future<void> getCategories() async {
+  Future<void> fetchData() async {
     categories = await databaseService.getAllCategories();
-  }
-
-  Future<void> getTags() async {
     tags = await databaseService.getAllTags();
   }
 
@@ -46,7 +45,7 @@ class _CreateExpenseState extends State<CreateExpense> {
         title: Text('Create expense'),
       ),
       body: FutureBuilder(
-        future: Future.wait<void>([getCategories(), getTags()]),
+        future: categories.isEmpty && tags.isEmpty ? fetchData() : null,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (categories.isNotEmpty && tags.isNotEmpty) {
             return Container(
@@ -139,20 +138,35 @@ class _CreateExpenseState extends State<CreateExpense> {
                       onPressed: hasImage && _image == null
                           ? () async {
                               await getImage();
-                              hasImage = false;
                             }
-                          : () {
+                          : () async {
                               if (formKey.currentState.validate()) {
+                                Category temp = await databaseService
+                                    .readCategory(category);
                                 Expense expense = new Expense(
                                   category: category,
                                   amount: double.parse(amountController.text),
                                   description: descController.text ?? '',
                                   tags: chosenTags,
+                                  hasImage: hasImage,
+                                );
+                                String id = await databaseService.addExpense(expense);
+                                if (_image != null) {
+                                  await FirebaseStorage.instance
+                                      .ref(id)
+                                      .putFile(_image);
+                                }
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => HomeScreen(),
+                                  ),
+                                  (route) => false,
                                 );
                               }
                             },
                       child: Text(
-                        hasImage ? 'Click image' : 'Proceed',
+                        hasImage && _image == null ? 'Click image' : 'Proceed',
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.pink[300],

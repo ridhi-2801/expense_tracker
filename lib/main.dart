@@ -1,5 +1,6 @@
 import 'package:expense_tracker/confirmation.dart';
 import 'package:expense_tracker/scanReceipt.dart';
+import 'package:expense_tracker/screens/approverHomePage.dart';
 import 'package:expense_tracker/screens/createCategory.dart';
 import 'package:expense_tracker/screens/createExpense.dart';
 import 'package:expense_tracker/screens/createTag.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/signIn.dart';
 
@@ -21,7 +23,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -62,6 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               FlatButton(
                 onPressed: () async {
+                  SharedPreferences pref =
+                      await SharedPreferences.getInstance();
+                  await pref.clear();
                   await FirebaseAuth.instance.signOut();
                   Navigator.pushReplacement(
                     context,
@@ -71,6 +75,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
                 child: Text('Logout'),
+                color: Colors.red[300],
+              ),
+              FlatButton(
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignUp(),
+                    ),
+                  );
+                },
+                child: Text('Register'),
                 color: Colors.red[300],
               ),
             ],
@@ -84,9 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
             FlatButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => CreateCategory()
-                ),
+                MaterialPageRoute(builder: (context) => CreateCategory()),
               ),
               child: Text('Create Category'),
               color: Colors.red[300],
@@ -94,9 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
             FlatButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => CreateTag()
-                ),
+                MaterialPageRoute(builder: (context) => CreateTag()),
               ),
               child: Text('Create tag'),
               color: Colors.red[300],
@@ -104,11 +117,17 @@ class _HomeScreenState extends State<HomeScreen> {
             FlatButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => CreateExpense()
-                ),
+                MaterialPageRoute(builder: (context) => CreateExpense()),
               ),
               child: Text('Create expense'),
+              color: Colors.red[300],
+            ),
+            FlatButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ApproverDashboard()),
+              ),
+              child: Text('Approver homepage'),
               color: Colors.red[300],
             ),
           ],

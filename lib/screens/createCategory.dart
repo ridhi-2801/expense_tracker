@@ -25,7 +25,7 @@ class _CreateCategoryState extends State<CreateCategory> {
   }
 
   Future<void> fetchUsers() async {
-    users = await databaseService.getUnassinedUsers();
+    users = await databaseService.getAllIds();
   }
 
   @override

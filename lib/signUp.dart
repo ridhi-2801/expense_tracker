@@ -1,5 +1,8 @@
-import 'package:expense_tracker/signIn.dart';
+import 'package:expense_tracker/main.dart';
+import 'package:expense_tracker/services/auth.dart';
+import 'package:expense_tracker/services/models.dart';
 import 'package:flutter/material.dart';
+import 'screens/signIn.dart';
 import 'services/db.dart';
 
 class SignUp extends StatefulWidget {
@@ -8,13 +11,23 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  List<String> allIds = new List<String>();
+  TextEditingController name = new TextEditingController();
+  TextEditingController id = new TextEditingController();
+  TextEditingController email = new TextEditingController();
+  TextEditingController pass = new TextEditingController();
+  String role = 'Approver';
+
+  void fetchIds() async {
+    allIds = await DatabaseService().getAllIds();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return Scaffold(body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewPortConstraints) {
-      return SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -61,212 +74,261 @@ class _SignUpState extends State<SignUp> {
                     child: Padding(
                       padding:
                           const EdgeInsets.only(left: 26.0, right: 16, top: 50),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Employeee Name",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: width / 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          TextField(
-                            keyboardType: TextInputType.name,
-                            decoration: InputDecoration(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Employeee Name",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: width / 25,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            TextFormField(
+                              keyboardType: TextInputType.name,
+                              controller: name,
+                              decoration: InputDecoration(
+                                  suffixIcon: Icon(
+                                    Icons.check,
+                                    color: Colors.grey,
+                                  ),
+                                  border: new UnderlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Color(0xff083EF6))),
+                                  hintText: "Enter Employee Name"),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Employeee id",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: width / 25,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            TextFormField(
+                              controller: id,
+                              validator: (value) {
+                                if (allIds.contains(value)) {
+                                  return 'Id already exists';
+                                } else
+                                  return null;
+                              },
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: InputDecoration(
+                                  suffixIcon: Icon(
+                                    Icons.check,
+                                    color: Colors.grey,
+                                  ),
+                                  border: new UnderlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Color(0xff083EF6))),
+                                  hintText: "Enter Employee id"),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Employeee email",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: width / 25,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            TextFormField(
+                              controller: email,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: InputDecoration(
                                 suffixIcon: Icon(
                                   Icons.check,
                                   color: Colors.grey,
                                 ),
                                 border: new UnderlineInputBorder(
-                                    borderSide: new BorderSide(
-                                        color: Color(0xff083EF6))),
-                                hintText: "Enter Employee Name"),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            "Employeee id",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: width / 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          TextField(
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                                suffixIcon: Icon(
-                                  Icons.check,
-                                  color: Colors.grey,
+                                  borderSide: new BorderSide(
+                                    color: Color(0xff083EF6),
+                                  ),
                                 ),
-                                border: new UnderlineInputBorder(
-                                    borderSide: new BorderSide(
-                                        color: Color(0xff083EF6))),
-                                hintText: "Enter Employee id"),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            "Password",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: width / 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          TextField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                                suffixIcon: Icon(
-                                  Icons.remove_red_eye,
-                                  color: Colors.grey,
-                                ),
-                                border: new UnderlineInputBorder(
-                                    borderSide: new BorderSide(
-                                        color: Color(0xff083EF6))),
-                                hintText: "Enter Password"),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                         /* Text(
-                            "Confirm Password",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: width / 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          TextField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                                suffixIcon: Icon(
-                                  Icons.remove_red_eye,
-                                  color: Colors.grey,
-                                ),
-                                border: new UnderlineInputBorder(
-                                    borderSide: new BorderSide(
-                                        color: Color(0xff083EF6))),
-                                hintText: "Enter Password"),
-                          ),*/
-                          Text(
-                            "User Category",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: width / 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          DropdownButton(
-                            value: "Admin",
-                            hint: Text("User Catergory"),
-                            style: TextStyle(
-                              color: Color.fromRGBO(38, 50, 56, 0.30),
-                              fontSize: 15.0,
-                              fontFamily: "Gilroy",
+                                hintText: "Enter Employee email",
+                              ),
                             ),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.black45,
+                            SizedBox(
+                              height: 20,
                             ),
-                            onChanged: (value) {
-                              setState(() {
-                                //itemCategory = value == "Veg" ? true : false;
-                              });
-                            },
-                            items: [
-                              DropdownMenuItem(
-                                value: "Admin",
-                                child: Text(
-                                  "Admin",
-                                  style: TextStyle(fontSize: 15),
-                                ),
+                            Text(
+                              "Password",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: width / 25,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            TextFormField(
+                              controller: pass,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                  suffixIcon: Icon(
+                                    Icons.remove_red_eye,
+                                    color: Colors.grey,
+                                  ),
+                                  border: new UnderlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Color(0xff083EF6))),
+                                  hintText: "Enter Password"),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "User Category",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: width / 25,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            DropdownButton(
+                              hint: Text("User Catergory"),
+                              value: role,
+                              style: TextStyle(
+                                color: Color.fromRGBO(38, 50, 56, 0.30),
+                                fontSize: 15.0,
+                                fontFamily: "Gilroy",
                               ),
-                              DropdownMenuItem(
-                                value: "checker",
-                                child: Text(
-                                  "checker",
-                                  style: TextStyle(fontSize: 15),
-                                ),
+                              underline: Container(
+                                height: 2,
+                                color: Colors.black45,
                               ),
-                              DropdownMenuItem(
-                                value: "User",
-                                child: Text(
-                                  "User",
-                                  style: TextStyle(fontSize: 15),
+                              onChanged: (value) {
+                                setState(() {
+                                  role = value;
+                                });
+                              },
+                              items: [
+                                DropdownMenuItem(
+                                  value: "Admin",
+                                  child: Text(
+                                    "Admin",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            "Forgot Password ?",
-                            style: TextStyle(
-                                color: Color(0xff083EF6),
-                                fontWeight: FontWeight.bold,
-                                fontSize: width / 25),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top:16.0,left: 16,right: 16,bottom: 8),
-                            child: Container(
-                              height: 60,
-                              decoration: BoxDecoration(
+                                DropdownMenuItem(
+                                  value: "checker",
+                                  child: Text(
+                                    "checker",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                                DropdownMenuItem(
+                                  value: "Approver",
+                                  child: Text(
+                                    "Approver",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Forgot Password ?",
+                              style: TextStyle(
                                   color: Color(0xff083EF6),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 16.0, right: 16),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Sign Up",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: width / 25),
-                                    ),
-                                    Icon(
-                                      Icons.arrow_forward,
-                                      color: Colors.white,
-                                    )
-                                  ],
-                                ),
-                              ),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: width / 25),
                             ),
-                          ),
-                          Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 16.0, left: 16, right: 16, bottom: 8),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  DatabaseService databaseService =
+                                      new DatabaseService();
+                                  Employee employee = new Employee(
+                                    id: id.text,
+                                    name: name.text,
+                                    role: role,
+                                    email: email.text,
+                                  );
+                                  AuthService auth = new AuthService();
+                                  await auth.signUp(
+                                      email.text, pass.text, context);
+                                  await databaseService
+                                      .updateUserData(employee);
+                                  Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Sign_In()));
-                              },
-                              child: RichText(
-                                text: TextSpan(
-                                    text: "Already have Account?",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: width / 27),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: " Sign In",
+                                      builder: (context) => HomeScreen(),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xff083EF6),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 16.0, right: 16),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Sign Up",
                                           style: TextStyle(
-                                              color: Color(0xff083EF6),
-                                              fontSize: width / 27,
-                                              fontWeight: FontWeight.bold))
-                                    ]),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: width / 25,
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.arrow_forward,
+                                          color: Colors.white,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            Center(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SignIn(),
+                                    ),
+                                  );
+                                },
+                                child: RichText(
+                                  text: TextSpan(
+                                    text: "Already have Account?",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: width / 27,
+                                    ),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: " Sign In",
+                                        style: TextStyle(
+                                          color: Color(0xff083EF6),
+                                          fontSize: width / 27,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -275,7 +337,7 @@ class _SignUpState extends State<SignUp> {
             ),
           ),
         ),
-      );
-    }));
+      ),
+    );
   }
 }
