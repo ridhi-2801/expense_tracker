@@ -222,7 +222,7 @@ class _SignUpState extends State<SignUp> {
                                 DropdownMenuItem(
                                   value: "Checker",
                                   child: Text(
-                                    "checker",
+                                    "Checker",
                                     style: TextStyle(fontSize: 15),
                                   ),
                                 ),

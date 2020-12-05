@@ -1,5 +1,5 @@
-import 'package:expense_tracker/confirmation.dart';
-import 'package:expense_tracker/homePage.dart';
+import 'package:expense_tracker/screens/confirmation.dart';
+import 'package:expense_tracker/screens/expenseCreatorHomePage.dart';
 import 'package:expense_tracker/scanReceipt.dart';
 import 'package:expense_tracker/screens/approverHomePage.dart';
 import 'package:expense_tracker/screens/assignUsers.dart';
@@ -7,6 +7,7 @@ import 'package:expense_tracker/screens/createCategory.dart';
 import 'package:expense_tracker/screens/createExpense.dart';
 import 'package:expense_tracker/screens/createTag.dart';
 import 'package:expense_tracker/screens/signUp.dart';
+import 'package:expense_tracker/shared/drawer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
       ],
-      home: HomeScreen(),
+      home: SignIn(),
     );
   }
 }
@@ -58,44 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('Home'),
       ),
-      drawer: Drawer(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              FlatButton(
-                onPressed: () async {
-                  SharedPreferences pref =
-                      await SharedPreferences.getInstance();
-                  await pref.clear();
-                  await FirebaseAuth.instance.signOut();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SignIn(),
-                    ),
-                  );
-                },
-                child: Text('Logout'),
-                color: Colors.red[300],
-              ),
-              FlatButton(
-                onPressed: () async {
-                  await FirebaseAuth.instance.signOut();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SignUp(),
-                    ),
-                  );
-                },
-                child: Text('Register'),
-                color: Colors.red[300],
-              ),
-            ],
-          ),
-        ),
-      ),
+      drawer: commonDrawer(context),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -143,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
             FlatButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(builder: (context) => ExpenseCreatorHomePage()),
               ),
               child: Text('Homepage'),
               color: Colors.red[300],
@@ -159,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
             FlatButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Confirmation()),
+                MaterialPageRoute(builder: (context) => Confirmation(text: 'Default',)),
               ),
               child: Text('Confirmation'),
               color: Colors.red[300],

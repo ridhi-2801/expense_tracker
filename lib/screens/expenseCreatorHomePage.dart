@@ -1,95 +1,93 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-class HomePage extends StatefulWidget {
+import '../services/db.dart';
+
+class ExpenseCreatorHomePage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _ExpenseCreatorHomePageState createState() => _ExpenseCreatorHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
+  List<String> categories = new List<String>();
+  List<String> tags = new List<String>();
+  List<String> chosenTags = new List<String>();
+  DatabaseService databaseService = new DatabaseService();
+  String category;
+  GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+  int size = 1;
+  bool hasImage = false;
+  TextEditingController amountController = new TextEditingController();
+  TextEditingController descController = new TextEditingController();
+  File _image;
+  final picker = ImagePicker();
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      bottomNavigationBar: Container(
-        height: height / 4.5,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView(
-            children: [
-              Text(
-                "New Expenses",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              ExpenseCards(height: height, width: width),
-              SizedBox(
-                height: 20,
-              ),
-              ExpenseCards(height: height, width: width)
-            ],
-          ),
-        ),
-      ),
-      body: Column(
-        children: [
-          Stack(
-            overflow: Overflow.visible,
-            children: [
-              Container(
-                height: height / 2.3,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [Color(0xff008DFF), Color(0xff083EF6)])),
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16, left: 16, top: 80),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Good Morning,",
-                              style: TextStyle(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              overflow: Overflow.visible,
+              children: [
+                Container(
+                  height: height / 2.3,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [Color(0xff008DFF), Color(0xff083EF6)])),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(right: 16, left: 16, top: 80),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Good Morning,",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: width / 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundColor: Colors.white,
+                                child: CircleAvatar(
+                                  radius: 25,
+                                  foregroundColor: Colors.blue,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            "Aman",
+                            style: TextStyle(
                                 color: Colors.white,
                                 fontSize: width / 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundColor: Colors.white,
-                              child: CircleAvatar(
-                                radius: 25,
-                                foregroundColor: Colors.blue,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          "Aman",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: width / 14,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        //    SizedBox(height: height/5,)
-                      ],
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                bottom: -250,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 16),
-                  child: Container(
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 200,
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(12),
                       width: width / 1.05,
                       height: height / 2,
                       decoration: BoxDecoration(
@@ -219,15 +217,37 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
-                      )),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            "Rejected Expenses",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          ExpenseCards(height: height, width: width),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          ExpenseCards(height: height, width: width)
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -258,39 +278,35 @@ class ExpenseCards extends StatelessWidget {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Image(image: AssetImage("images/carpentort.png")),
-              // Image(image: AssetImage("images/carpentorb.png"))
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(
-                "28/Nov/2020",
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-              ),
-              Text(
-                "Carpentry",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              Text(
-                "₹ 2500",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(left: 18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  "28/Nov/2020",
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                ),
+                Text(
+                  "Carpentry",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                Text(
+                  "₹ 2500",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ],
+            ),
           ),
           Text(
-            "Approved",
+            "Rejected",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 23,
-              color: Color(0xff083EF6),
+              fontSize: 16,
+              color: Color(0xfff60808),
             ),
           ),
         ],

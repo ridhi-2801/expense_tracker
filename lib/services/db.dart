@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/screens/adminHomepage.dart';
 import 'package:expense_tracker/services/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../screens/expenseCreatorHomePage.dart';
 
 class DatabaseService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -11,10 +14,37 @@ class DatabaseService {
   final CollectionReference expensesRef =
       FirebaseFirestore.instance.collection('Expenses');
 
+  Future<String> getUserId() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getString('Id');
+  }
+
+  Future<String> getUserRole() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getString('Role');
+  }
+
+  Future<String> getUserName() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString('Name', 'Yuvraj');
+    return pref.getString('Name');
+  }
+
+  Future<dynamic> getUserHomepage() async {
+    String role = await getUserRole();
+    if (role == 'Admin') {
+      return AdminHomepage();
+    } else if (role == 'Expense creator') {
+      return ExpenseCreatorHomePage();
+    }
+  }
+
   Future<void> updateUserData(Employee employee) async {
     DocumentReference docRef = userRef.doc(employee.id);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setString('Id', employee.id);
+    await sharedPreferences.setString('Role', employee.role);
+    await sharedPreferences.setString('Name', employee.name);
     try {
       await FirebaseFirestore.instance.collection('names').doc('uids').update(
         {
@@ -168,7 +198,10 @@ class DatabaseService {
     return Category.fromMap(doc.data());
   }
 
-  Future<Employee> getUserData(String id) async {
+  Future<Employee> getUserData([String id]) async {
+    if (id == null) {
+      id = await getUserId();
+    }
     DocumentSnapshot doc = await userRef.doc(id).get();
     return Employee.fromMap(doc.data());
   }

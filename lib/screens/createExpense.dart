@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:expense_tracker/confirmation.dart';
+import 'package:expense_tracker/screens/confirmation.dart';
 import 'package:expense_tracker/services/db.dart';
 import 'package:expense_tracker/services/models.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -168,7 +168,7 @@ class _CreateExpenseState extends State<CreateExpense> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => Confirmation(),
+                                    builder: (context) => Confirmation(text: 'Expense',),
                                   ),
                                 );
                               }

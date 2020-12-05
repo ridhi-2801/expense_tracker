@@ -1,4 +1,5 @@
 import 'package:expense_tracker/main.dart';
+import 'package:expense_tracker/screens/confirmation.dart';
 import 'package:expense_tracker/services/db.dart';
 import 'package:expense_tracker/services/models.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class _CreateCategoryState extends State<CreateCategory> {
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
   TextEditingController nameController = new TextEditingController();
   TextEditingController amountController = new TextEditingController();
+  double width, height;
 
   @override
   void initState() {
@@ -30,102 +32,207 @@ class _CreateCategoryState extends State<CreateCategory> {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Create Category'),
-      ),
-      body: FutureBuilder(
-        future: fetchUsers(),
-        builder: (context, snapshot) {
-          if (users.isNotEmpty) {
-            return Container(
-              padding: EdgeInsets.all(20),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Form(
-                key: formKey,
-                child: Column(
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewPortConstraints) {
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height: height / 5,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Color(0xff008DFF), Color(0xff083EF6)])),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    TextFormField(
-                      controller: nameController,
-                      decoration: InputDecoration(labelText: 'Category name'),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Name cannot be empty';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      controller: amountController,
-                      decoration: InputDecoration(labelText: 'Monthly limit'),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Amount cannot be empty';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    for (var i = 0; i < size; i++) categoryWidget(),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: FlatButton(
-                        padding: EdgeInsets.all(0),
-                        onPressed: () {
-                          setState(() {
-                            size++;
-                          });
-                        },
-                        child: Text(
-                          'Add new user +',
-                          textAlign: TextAlign.left,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 80),
+                      child: IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 30,
                         ),
                       ),
                     ),
-                    FlatButton(
-                      onPressed: () async {
-                        if (formKey.currentState.validate()) {
-                          Category category = new Category(
-                            name: nameController.text,
-                            monthlyLimit: double.parse(amountController.text),
-                            users: chosenUsers,
-                          );
-                          await databaseService.addCategoryData(category);
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen(),
-                            ),
-                            (route) => false,
-                          );
-                        }
-                      },
+                    // SizedBox(
+                    //   width: width / 4.7,
+                    // ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 80),
                       child: Text(
-                        'Add category',
-                        style: TextStyle(color: Colors.white),
+                        "Create Category",
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      color: Colors.purple[400],
+                    ),
+                    Container(
+                      width: 40,
                     ),
                   ],
                 ),
               ),
-            );
-          } else if (users.isEmpty &&
-              snapshot.connectionState == ConnectionState.done) {
-            return Center(
-              child: Text('No user has any unassinged category'),
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
+              FutureBuilder(
+                future: users.isEmpty ? fetchUsers() : null,
+                builder: (context, snapshot) {
+                  if (users.isNotEmpty) {
+                    return Container(
+                      width: width,
+                      height: height / 1.3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Form(
+                          key: formKey,
+                          child: ListView(
+                            children: [
+                              Text(
+                                "Category Name",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: width / 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextFormField(
+                                controller: nameController,
+                                keyboardType: TextInputType.name,
+                                decoration: InputDecoration(
+                                  border: new UnderlineInputBorder(
+                                    borderSide: new BorderSide(
+                                      color: Color(0xff083EF6),
+                                    ),
+                                  ),
+                                  hintText: "Enter Category Name",
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Name cannot be empty';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Text(
+                                "Monthly Limit",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: width / 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextFormField(
+                                controller: amountController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  border: new UnderlineInputBorder(
+                                    borderSide: new BorderSide(
+                                      color: Color(0xff083EF6),
+                                    ),
+                                  ),
+                                  hintText: "Enter Monthly Limit",
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Amount cannot be empty';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                              for (var i = 0; i < size; i++) categoryWidget(),
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: FlatButton(
+                                  padding: EdgeInsets.all(0),
+                                  onPressed: () {
+                                    setState(() {
+                                      size++;
+                                    });
+                                  },
+                                  child: Text(
+                                    'Add new user +',
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: FlatButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  color: Color(0xff083EF6),
+                                  height: 60,
+                                  onPressed: () async {
+                                    if (formKey.currentState.validate()) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            content: Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                      Category category = new Category(
+                                        name: nameController.text,
+                                        monthlyLimit:
+                                            double.parse(amountController.text),
+                                        users: chosenUsers,
+                                      );
+                                      await databaseService
+                                          .addCategoryData(category);
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Confirmation(text: 'Category',),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: Text(
+                                    "Add Category",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: width / 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 
@@ -134,10 +241,16 @@ class _CreateCategoryState extends State<CreateCategory> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: 36,
+          height: 30,
         ),
-
-        Text('User'),
+        Text(
+          "User",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: width / 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         DropdownButtonFormField(
           validator: (value) {
             if (chosenUsers.isEmpty) {
