@@ -1,19 +1,15 @@
 import 'package:expense_tracker/screens/confirmation.dart';
 import 'package:expense_tracker/screens/expenseCreatorHomePage.dart';
-import 'package:expense_tracker/scanReceipt.dart';
 import 'package:expense_tracker/screens/approverHomePage.dart';
 import 'package:expense_tracker/screens/assignUsers.dart';
 import 'package:expense_tracker/screens/createCategory.dart';
 import 'package:expense_tracker/screens/createExpense.dart';
 import 'package:expense_tracker/screens/createTag.dart';
-import 'package:expense_tracker/screens/signUp.dart';
 import 'package:expense_tracker/shared/drawer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/signIn.dart';
 
@@ -107,7 +103,8 @@ class _HomeScreenState extends State<HomeScreen> {
             FlatButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ExpenseCreatorHomePage()),
+                MaterialPageRoute(
+                    builder: (context) => ExpenseCreatorHomePage()),
               ),
               child: Text('Homepage'),
               color: Colors.red[300],
@@ -115,15 +112,11 @@ class _HomeScreenState extends State<HomeScreen> {
             FlatButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ScanReceipt()),
-              ),
-              child: Text('Scan Receipt'),
-              color: Colors.red[300],
-            ),
-            FlatButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Confirmation(text: 'Default',)),
+                MaterialPageRoute(
+                  builder: (context) => Confirmation(
+                    text: 'Default',
+                  ),
+                ),
               ),
               child: Text('Confirmation'),
               color: Colors.red[300],

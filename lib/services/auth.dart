@@ -1,8 +1,6 @@
 // import 'package:AttendanceApp/services/db.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expense_tracker/services/db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import '../services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

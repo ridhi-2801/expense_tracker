@@ -28,6 +28,7 @@ class Expense {
   String imageName;
   double amount;
   String creatorId;
+  DateTime createdAt;
   Expense({
     this.id,
     this.category,
@@ -37,6 +38,7 @@ class Expense {
     this.amount,
     this.hasImage,
     this.creatorId,
+    this.createdAt,
   });
   Expense.fromMap(Map data) {
     id = data['id'];
@@ -46,6 +48,7 @@ class Expense {
     tags = data['Tags'];
     hasImage = data['hasImage'];
     creatorId = data['Creator Id'];
+    createdAt = data['Created at'];
   }
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = new Map();

@@ -1,11 +1,7 @@
-import 'package:expense_tracker/screens/expenseCreatorHomePage.dart';
-import 'package:expense_tracker/main.dart';
 import 'package:expense_tracker/screens/signUp.dart';
 import 'package:expense_tracker/services/db.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'adminHomepage.dart';
 import '../services/auth.dart';
 
 class SignIn extends StatefulWidget {
@@ -28,14 +24,16 @@ class _SignInState extends State<SignIn> {
   void initState() {
     super.initState();
     auth.user.listen((user) async {
-      DatabaseService db = DatabaseService();
-      var screen = await db.getUserHomepage();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => screen,
-        ),
-      );
+      if (user != null) {
+        DatabaseService db = DatabaseService();
+        var screen = await db.getUserHomepage();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => screen,
+          ),
+        );
+      }
     });
   }
 
@@ -47,7 +45,6 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(

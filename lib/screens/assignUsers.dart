@@ -1,7 +1,5 @@
 import 'package:expense_tracker/services/db.dart';
 import 'package:flutter/material.dart';
-
-import '../main.dart';
 import 'confirmation.dart';
 
 class AssignUsers extends StatefulWidget {

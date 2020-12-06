@@ -32,6 +32,7 @@ class DatabaseService {
 
   Future<dynamic> getUserHomepage() async {
     String role = await getUserRole();
+    print(role);
     if (role == 'Admin') {
       return AdminHomepage();
     } else if (role == 'Expense creator') {

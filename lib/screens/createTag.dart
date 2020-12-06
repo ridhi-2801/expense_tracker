@@ -1,5 +1,4 @@
 import 'package:expense_tracker/services/db.dart';
-import '../main.dart';
 import '../services/models.dart';
 import 'package:flutter/material.dart';
 

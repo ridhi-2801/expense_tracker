@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreateExpense extends StatefulWidget {
-  CreateExpense({Key key}) : super(key: key);
+  final String description;
+  final double amount;
+  CreateExpense({Key key, this.amount, this.description}) : super(key: key);
 
   @override
   _CreateExpenseState createState() => _CreateExpenseState();
@@ -26,9 +28,12 @@ class _CreateExpenseState extends State<CreateExpense> {
   TextEditingController descController = new TextEditingController();
   File _image;
   final picker = ImagePicker();
+  double height, width;
 
   @override
   void initState() {
+    amountController.text = widget.amount?.toString() ?? '';
+    descController.text = widget.description ?? '';
     super.initState();
   }
 
@@ -39,145 +44,200 @@ class _CreateExpenseState extends State<CreateExpense> {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Create expense'),
-      ),
       body: FutureBuilder(
         future: categories.isEmpty && tags.isEmpty ? fetchData() : null,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (categories.isNotEmpty && tags.isNotEmpty) {
             return Container(
-              padding: EdgeInsets.all(20),
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: Form(
                 key: formKey,
-                child: ListView(
+                child: Column(
                   children: [
-                    Row(
-                      children: [
-                        for (var x in chosenTags)
-                          Container(
-                            padding: EdgeInsets.only(right: 18),
-                            child: InputChip(
-                              label: Text(x),
-                              onDeleted: () {
-                                setState(() {
-                                  chosenTags.remove(x);
-                                });
-                              },
+                    Container(
+                      height: height / 5,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: [Color(0xff008DFF), Color(0xff083EF6)])),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 80),
+                            child: IconButton(
+                              onPressed: () => Navigator.pop(context),
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                                size: 30,
+                              ),
                             ),
                           ),
-                      ],
-                    ),
-                    for (var i = 0; i < size; i++) tagWidget(),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: FlatButton(
-                        padding: EdgeInsets.all(0),
-                        onPressed: () {
-                          setState(() {
-                            size++;
-                          });
-                        },
-                        child: Text(
-                          'Add new tag +',
-                          textAlign: TextAlign.left,
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 80),
+                            child: Text(
+                              "Create Expense",
+                              style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 40,
+                          ),
+                        ],
                       ),
                     ),
-                    DropdownButtonFormField(
-                      hint: Text('Select category'),
-                      items: categories.map((String cat) {
-                        return new DropdownMenuItem(
-                          value: cat,
-                          child: Text(cat),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          category = value;
-                        });
-                      },
-                      validator: (value) {
-                        if (category == null) {
-                          return 'Select a category';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: descController,
-                      decoration: InputDecoration(labelText: 'Description'),
-                    ),
-                    TextFormField(
-                      controller: amountController,
-                      decoration: InputDecoration(labelText: 'Amount'),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Amount cannot be empty';
-                        }
-                        return null;
-                      },
-                    ),
-                    CheckboxListTile(
-                      controlAffinity: ListTileControlAffinity.leading,
-                      title: Text('Any attachments?'),
-                      value: hasImage,
-                      onChanged: (value) {
-                        setState(() {
-                          hasImage = value;
-                        });
-                      },
-                    ),
-                    _image != null ? Image.file(_image) : Container(),
-                    FlatButton(
-                      onPressed: hasImage && _image == null
-                          ? () async {
-                              await getImage();
-                            }
-                          : () async {
-                              if (formKey.currentState.validate()) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      content: Center(
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    );
-                                  },
-                                );
-                                Expense expense = new Expense(
-                                  category: category,
-                                  amount: double.parse(amountController.text),
-                                  description: descController.text ?? '',
-                                  tags: chosenTags,
-                                  hasImage: hasImage,
-                                );
-                                String id =
-                                    await databaseService.addExpense(expense);
-                                if (_image != null) {
-                                  await FirebaseStorage.instance
-                                      .ref(id)
-                                      .putFile(_image);
-                                }
-                                Navigator.pop(context);
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Confirmation(text: 'Expense',),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              for (var x in chosenTags)
+                                Container(
+                                  padding: EdgeInsets.only(right: 18),
+                                  child: InputChip(
+                                    label: Text(x),
+                                    onDeleted: () {
+                                      setState(() {
+                                        chosenTags.remove(x);
+                                      });
+                                    },
                                   ),
-                                );
-                              }
+                                ),
+                            ],
+                          ),
+                          for (var i = 0; i < size; i++) tagWidget(),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: FlatButton(
+                              padding: EdgeInsets.all(0),
+                              onPressed: () {
+                                setState(() {
+                                  size++;
+                                });
+                              },
+                              child: Text(
+                                'Add new tag +',
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ),
+                          DropdownButtonFormField(
+                            hint: Text('Select category'),
+                            items: categories.map((String cat) {
+                              return new DropdownMenuItem(
+                                value: cat,
+                                child: Text(cat),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                category = value;
+                              });
                             },
-                      child: Text(
-                        hasImage && _image == null ? 'Click image' : 'Proceed',
-                        style: TextStyle(color: Colors.white),
+                            validator: (value) {
+                              if (category == null) {
+                                return 'Select a category';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: descController,
+                            // initialValue: widget.description ?? '',
+                            decoration:
+                                InputDecoration(labelText: 'Description'),
+                          ),
+                          TextFormField(
+                            controller: amountController,
+                            decoration: InputDecoration(labelText: 'Amount'),
+                            keyboardType: TextInputType.number,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Amount cannot be empty';
+                              }
+                              return null;
+                            },
+                          ),
+                          CheckboxListTile(
+                            controlAffinity: ListTileControlAffinity.leading,
+                            title: Text('Any attachments?'),
+                            value: hasImage,
+                            onChanged: (value) {
+                              setState(() {
+                                hasImage = value;
+                              });
+                            },
+                          ),
+                          _image != null ? Image.file(_image) : Container(),
+                          FlatButton(
+                            height: 45,
+                            minWidth: width / 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            color: Color(0xff083EF6),
+                            onPressed: hasImage && _image == null
+                                ? () async {
+                                    await getImage();
+                                  }
+                                : () async {
+                                    if (formKey.currentState.validate()) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            content: Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                      Expense expense = new Expense(
+                                        category: category,
+                                        amount:
+                                            double.parse(amountController.text),
+                                        description: descController.text ?? '',
+                                        tags: chosenTags,
+                                        hasImage: hasImage,
+                                      );
+                                      String id = await databaseService
+                                          .addExpense(expense);
+                                      if (_image != null) {
+                                        await FirebaseStorage.instance
+                                            .ref(id)
+                                            .putFile(_image);
+                                      }
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Confirmation(
+                                            text: 'Expense',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                            child: Text(
+                              hasImage && _image == null
+                                  ? 'Click image'
+                                  : 'Proceed',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
                       ),
-                      color: Colors.pink[300],
                     ),
                   ],
                 ),
