@@ -17,7 +17,7 @@ class _SignUpState extends State<SignUp> {
   TextEditingController email = new TextEditingController();
   TextEditingController pass = new TextEditingController();
   String role = 'Approver';
-
+  bool obsecure = true;
   void fetchIds() async {
     allIds = await DatabaseService().getAllIds();
   }
@@ -166,12 +166,19 @@ class _SignUpState extends State<SignUp> {
                             ),
                             TextFormField(
                               controller: pass,
-                              obscureText: true,
+                              obscureText: obsecure,
                               decoration: InputDecoration(
-                                  suffixIcon: Icon(
-                                    Icons.remove_red_eye,
-                                    color: Colors.grey,
-                                  ),
+                                  suffixIcon:IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          obsecure =
+                                          obsecure ? false : true;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        Icons.remove_red_eye,
+                                        color: Colors.grey,
+                                      )),
                                   border: new UnderlineInputBorder(
                                       borderSide: new BorderSide(
                                           color: Color(0xff083EF6))),
