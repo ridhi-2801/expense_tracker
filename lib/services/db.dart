@@ -192,6 +192,7 @@ class DatabaseService {
       'Description': expense.description,
       'hasImage': expense.hasImage,
       'Creator Id': id,
+      'Created at': DateTime.now(),
     });
     Category temp = await readCategory(expense.category);
     await userRef.doc(temp.users.first).update({
