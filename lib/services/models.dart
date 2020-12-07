@@ -47,8 +47,9 @@ class Expense {
     category = data['Category'];
     tags = data['Tags'];
     hasImage = data['hasImage'];
+    print(data['Created at'].runtimeType);
+    createdAt = DateTime.parse(data['Created at'].toDate().toString());
     creatorId = data['Creator Id'];
-    createdAt = data['Created at'];
   }
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = new Map();

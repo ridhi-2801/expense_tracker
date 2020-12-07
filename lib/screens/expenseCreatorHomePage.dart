@@ -1,3 +1,4 @@
+import 'package:expense_tracker/screens/approverHomePage.dart';
 import 'package:expense_tracker/screens/createExpense.dart';
 import 'package:expense_tracker/services/models.dart';
 import 'package:expense_tracker/shared/drawer.dart';
@@ -217,9 +218,8 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
                                                       CreateExpense(
                                                     description:
                                                         descController.text,
-                                                        
-                                                    amount:
-                                                        double.parse(amountController.text),
+                                                    amount: double.parse(
+                                                        amountController.text),
                                                   ),
                                                 ),
                                               );
@@ -281,7 +281,15 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                 ),
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ApproverHomepage(),
+                                                    ),
+                                                  );
+                                                },
                                                 color: Color(0xff083EF6),
                                                 child: Text(
                                                   'View rejected expenses',

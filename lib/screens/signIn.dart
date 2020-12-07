@@ -20,13 +20,19 @@ class _SignInState extends State<SignIn> {
     role = pref.getString('Role');
   }
 
+  bool obscureText = true;
+  var screen;
+
   @override
   void initState() {
     super.initState();
     auth.user.listen((user) async {
-      if (user != null) {
+      if (user != null || screen != null) {
         DatabaseService db = DatabaseService();
-        var screen = await db.getUserHomepage();
+        screen = await db.getUserHomepage();
+        // while (screen == null) {
+        //   screen = await db.getUserHomepage();
+        // }
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -129,16 +135,26 @@ class _SignInState extends State<SignIn> {
                             ),
                             TextField(
                               controller: password,
-                              obscureText: true,
+                              obscureText: obscureText,
                               decoration: InputDecoration(
-                                  suffixIcon: Icon(
-                                    Icons.remove_red_eye,
-                                    color: Colors.grey,
+                                suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        obscureText =
+                                            obscureText ? false : true;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.remove_red_eye,
+                                      color: Colors.grey,
+                                    )),
+                                border: new UnderlineInputBorder(
+                                  borderSide: new BorderSide(
+                                    color: Color(0xff083EF6),
                                   ),
-                                  border: new UnderlineInputBorder(
-                                      borderSide: new BorderSide(
-                                          color: Color(0xff083EF6))),
-                                  hintText: "Enter Password"),
+                                ),
+                                hintText: "Enter Password",
+                              ),
                             ),
                             SizedBox(
                               height: 20,
@@ -162,16 +178,21 @@ class _SignInState extends State<SignIn> {
                                     password.text,
                                     context,
                                   );
-                                  if (auth.user != null) {
-                                    DatabaseService db = DatabaseService();
-                                    var screen = await db.getUserHomepage();
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => screen,
-                                      ),
-                                    );
-                                  }
+                                  auth.user.listen(
+                                    (event) async {
+                                      if (event != null) {
+                                        DatabaseService db = DatabaseService();
+                                        var screen = await db.getUserHomepage();
+                                        print(screen);
+                                        await Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => screen,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  );
                                 },
                                 child: Container(
                                   height: 60,

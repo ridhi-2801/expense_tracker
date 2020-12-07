@@ -1,5 +1,5 @@
-// import 'package:AttendanceApp/services/db.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/screens/signIn.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,11 +21,14 @@ class AuthService {
           .get();
       Map map = snap.docs.first.data();
       SharedPreferences pref = await SharedPreferences.getInstance();
-      await pref.setString('Id', map['Employee Id']);
-      await pref.setString('Role', map['Employee role']);
-      await pref.setString('Name', map['Employee name']);
+      String id = map['Employee Id'];
+      String role = map['Employee role'];
+      String name = map['Employee name'];
+      await pref.setString('Id', id);
+      await pref.setString('Role', role);
+      await pref.setString('Name', name);
     } on FirebaseAuthException catch (e) {
-      await showDialog(
+      return await showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) {
@@ -34,7 +37,13 @@ class AuthService {
             actions: [
               FlatButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignIn(),
+                    ),
+                    (route) => false,
+                  );
                 },
                 child: Text('Retry'),
                 color: Colors.blue,
@@ -61,7 +70,13 @@ class AuthService {
             actions: [
               FlatButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignIn(),
+                    ),
+                    (route) => false,
+                  );
                 },
                 child: Text('Retry'),
                 color: Colors.blue,

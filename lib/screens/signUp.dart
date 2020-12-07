@@ -266,10 +266,27 @@ class _SignUpState extends State<SignUp> {
                                       email.text, pass.text, context);
                                   await databaseService
                                       .updateUserData(employee);
+                                  var home =
+                                      await databaseService.getUserHomepage();
+                                  // Future.delayed(
+                                  //   Duration(seconds: 5),
+                                  //   () => showDialog(
+                                  //     context: context,
+                                  //     barrierDismissible: false,
+                                  //     builder: (context) {
+                                  //       return AlertDialog(
+                                  //         content: Center(
+                                  //           child: CircularProgressIndicator(),
+                                  //         ),
+                                  //       );
+                                  //     },
+                                  //   ),
+                                  // );
+
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => HomeScreen(),
+                                      builder: (context) => home,
                                     ),
                                   );
                                 },

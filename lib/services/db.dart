@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/screens/approverHomePage.dart';
 import 'package:expense_tracker/screens/adminHomepage.dart';
+import 'package:expense_tracker/screens/blankScaffold.dart';
 import 'package:expense_tracker/services/models.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/expenseCreatorHomePage.dart';
@@ -21,12 +24,12 @@ class DatabaseService {
 
   Future<String> getUserRole() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    return pref.getString('Role');
+    String ret = pref.getString('Role');
+    return ret;
   }
 
   Future<String> getUserName() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.setString('Name', 'Yuvraj');
     return pref.getString('Name');
   }
 
@@ -37,7 +40,10 @@ class DatabaseService {
       return AdminHomepage();
     } else if (role == 'Expense creator') {
       return ExpenseCreatorHomePage();
-    }
+    } else if (role == 'Approver') {
+      return ApproverHomepage();
+    } else
+      return BlankScaffold();
   }
 
   Future<void> updateUserData(Employee employee) async {
@@ -259,5 +265,9 @@ class DatabaseService {
         'Expenses': FieldValue.arrayUnion([expense.id])
       });
     }
+  }
+
+  Future<String> getUrl(String id) async {
+    return await FirebaseStorage.instance.ref(id).getDownloadURL();
   }
 }
