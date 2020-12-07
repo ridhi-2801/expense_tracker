@@ -6,6 +6,8 @@ import '../services/db.dart';
 import '../shared/expenseDetails.dart';
 
 class ApproverHomepage extends StatefulWidget {
+  final bool edit;
+  ApproverHomepage({@required this.edit});
   @override
   _ApproverHomepageState createState() => _ApproverHomepageState();
 }
@@ -15,8 +17,6 @@ class _ApproverHomepageState extends State<ApproverHomepage> {
   Employee employee;
   DatabaseService databaseService = new DatabaseService();
   int currTime = DateTime.now().hour;
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -117,23 +117,25 @@ class _ApproverHomepageState extends State<ApproverHomepage> {
                                           ? databaseService.getUserData()
                                           : null,
                                       builder: (context, snapshot) {
-                                        if (!snapshot.hasData){
+                                        if (!snapshot.hasData) {
                                           return Center(
-                                            child:
-                                                CircularProgressIndicator(),
+                                            child: CircularProgressIndicator(),
                                           );
-                                        }
-                                        else if (snapshot.data.expensesAssigned
-                                            .isNotEmpty) {
+                                        } else if (snapshot
+                                            .data.expensesAssigned.isNotEmpty) {
                                           return Column(
                                             children: [
                                               ExpenseDetails(
                                                 width: width,
                                                 height: height,
                                                 withDecision: true,
-                                                ids: List<String>.from(snapshot.data.expensesAssigned),
+                                                edit: true,
+                                                ids: List<String>.from(
+                                                  snapshot
+                                                      .data.expensesAssigned,
+                                                
+                                                ),
                                               ),
-                                              
                                             ],
                                           );
                                         } else {
@@ -152,8 +154,7 @@ class _ApproverHomepageState extends State<ApproverHomepage> {
                                                 Text(
                                                   "No Data",
                                                   style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold,
+                                                    fontWeight: FontWeight.bold,
                                                     color: Colors.grey,
                                                     fontSize: 20,
                                                   ),
@@ -168,8 +169,7 @@ class _ApproverHomepageState extends State<ApproverHomepage> {
                                                     width: 1,
                                                     style: BorderStyle.solid,
                                                   ),
-                                                  shape:
-                                                      RoundedRectangleBorder(
+                                                  shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         new BorderRadius
                                                             .circular(10.0),
@@ -194,7 +194,7 @@ class _ApproverHomepageState extends State<ApproverHomepage> {
                                               ],
                                             ),
                                           );
-                                        } 
+                                        }
                                       }),
                                 ],
                               ),

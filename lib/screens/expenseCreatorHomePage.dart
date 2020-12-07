@@ -286,7 +286,7 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          ApproverHomepage(),
+                                                          ApproverHomepage(edit: true,),
                                                     ),
                                                   );
                                                 },

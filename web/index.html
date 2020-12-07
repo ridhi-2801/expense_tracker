@@ -28,6 +28,31 @@
       });
     }
   </script>
+  <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+       https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+  
+  <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+      apiKey: "AIzaSyCcX0rMOL6XfCz6oYUIszE2h77mQXkqKzQ",
+      authDomain: "expensetracker-11365.firebaseapp.com",
+      databaseURL: "https://expensetracker-11365.firebaseio.com",
+      projectId: "expensetracker-11365",
+      storageBucket: "expensetracker-11365.appspot.com",
+      messagingSenderId: "1006305489894",
+      appId: "1:1006305489894:web:511d4962f385087424dc27",
+      measurementId: "G-8Q4QRCB51L"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
   <script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>

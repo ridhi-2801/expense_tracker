@@ -1,18 +1,20 @@
 import 'package:expense_tracker/screens/confirmation.dart';
+import 'package:expense_tracker/screens/createExpense.dart';
 import 'package:expense_tracker/services/db.dart';
 import 'package:expense_tracker/services/models.dart';
 import 'package:expense_tracker/shared/attachmentDisplay.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseDetails extends StatefulWidget {
-  ExpenseDetails({
-    Key key,
-    @required this.width,
-    @required this.height,
-    @required this.withDecision,
-    @required this.ids,
-  }) : super(key: key);
-
+  ExpenseDetails(
+      {Key key,
+      @required this.width,
+      @required this.height,
+      @required this.withDecision,
+      @required this.ids,
+      this.edit})
+      : super(key: key);
+  final bool edit;
   final double width;
   final double height;
   final bool withDecision;
@@ -206,35 +208,52 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             OutlineButton(
-                              onPressed: () async {
-                                showDialog(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      content: Center(
-                                          child: CircularProgressIndicator()),
-                                    );
-                                  },
-                                );
-                                await db.rejectExpense(snapshot.data);
-                                setState(() {
-                                  isDecided[index] = true;
-                                  index++;
-                                });
-                                Navigator.pop(context);
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Confirmation(),
-                                  ),
-                                );
-                              },
+                              onPressed: widget.edit
+                                  ? () async {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CreateExpense(
+                                            description: snapshot.data.description,
+                                            amount: snapshot.data.amount,
+                                            tags: List<String>.from(snapshot.data.tags),
+                                            category: snapshot.data.category,
+                                            id: snapshot.data.id,
+                                            hasImage: snapshot.data.hasImage,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  : () async {
+                                      showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            content: Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                          );
+                                        },
+                                      );
+                                      await db.rejectExpense(snapshot.data);
+                                      setState(() {
+                                        isDecided[index] = true;
+                                        index++;
+                                      });
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Confirmation(),
+                                        ),
+                                      );
+                                    },
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 18.0, vertical: 10),
                                 child: Text(
-                                  'Reject',
+                                  widget.edit ? 'Edit' : 'Reject',
                                   style: TextStyle(
                                     color: Colors.red,
                                     fontSize: 20,

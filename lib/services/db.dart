@@ -41,7 +41,7 @@ class DatabaseService {
     } else if (role == 'Expense creator') {
       return ExpenseCreatorHomePage();
     } else if (role == 'Approver') {
-      return ApproverHomepage();
+      return ApproverHomepage(edit: false,);
     } else
       return BlankScaffold();
   }
@@ -181,6 +181,25 @@ class DatabaseService {
       );
     }
   }
+
+  Future<String> editExpense(Expense expense) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String id = prefs.getString('Id');
+    expensesRef.doc(expense.id).update({
+      'Category': expense.category,
+      'Amount': expense.amount,
+      'Tags': expense.tags,
+      'Description': expense.description,
+      'hasImage': expense.hasImage,
+      'Creator Id': id,
+      'Created at': DateTime.now(),
+    });
+    Category temp = await readCategory(expense.category);
+    await userRef.doc(temp.users.first).update({
+      'Expenses': FieldValue.arrayUnion([expense.id]),
+    });
+    return expense.id;
+  }  
 
   Future<String> addExpense(Expense expense) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -17,8 +17,11 @@ class _SignUpState extends State<SignUp> {
   TextEditingController email = new TextEditingController();
   TextEditingController pass = new TextEditingController();
   String role = 'Approver';
+
+  GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+
   bool obsecure = true;
-  void fetchIds() async {
+  Future<void> fetchIds() async {
     allIds = await DatabaseService().getAllIds();
   }
 
@@ -74,293 +77,306 @@ class _SignUpState extends State<SignUp> {
                     child: Padding(
                       padding:
                           const EdgeInsets.only(left: 26.0, right: 16, top: 50),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Employeee Name",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: width / 25,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            TextFormField(
-                              keyboardType: TextInputType.name,
-                              controller: name,
-                              decoration: InputDecoration(
-                                  suffixIcon: Icon(
-                                    Icons.check,
-                                    color: Colors.grey,
-                                  ),
-                                  border: new UnderlineInputBorder(
-                                      borderSide: new BorderSide(
-                                          color: Color(0xff083EF6))),
-                                  hintText: "Enter Employee Name"),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              "Employeee id",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: width / 25,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            TextFormField(
-                              controller: id,
-                              validator: (value) {
-                                if (allIds.contains(value)) {
-                                  return 'Id already exists';
-                                } else
-                                  return null;
-                              },
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                  suffixIcon: Icon(
-                                    Icons.check,
-                                    color: Colors.grey,
-                                  ),
-                                  border: new UnderlineInputBorder(
-                                      borderSide: new BorderSide(
-                                          color: Color(0xff083EF6))),
-                                  hintText: "Enter Employee id"),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              "Employeee email",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: width / 25,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            TextFormField(
-                              controller: email,
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                suffixIcon: Icon(
-                                  Icons.check,
-                                  color: Colors.grey,
-                                ),
-                                border: new UnderlineInputBorder(
-                                  borderSide: new BorderSide(
-                                    color: Color(0xff083EF6),
-                                  ),
-                                ),
-                                hintText: "Enter Employee email",
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              "Password",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: width / 25,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            TextFormField(
-                              controller: pass,
-                              obscureText: obsecure,
-                              decoration: InputDecoration(
-                                  suffixIcon:IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          obsecure =
-                                          obsecure ? false : true;
-                                        });
-                                      },
-                                      icon: Icon(
-                                        Icons.remove_red_eye,
-                                        color: Colors.grey,
-                                      )),
-                                  border: new UnderlineInputBorder(
-                                      borderSide: new BorderSide(
-                                          color: Color(0xff083EF6))),
-                                  hintText: "Enter Password"),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              "User Category",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: width / 25,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            DropdownButton(
-                              hint: Text("User Catergory"),
-                              value: role,
-                              style: TextStyle(
-                                color: Color.fromRGBO(38, 50, 56, 0.30),
-                                fontSize: 15.0,
-                                fontFamily: "Gilroy",
-                              ),
-                              underline: Container(
-                                height: 2,
-                                color: Colors.black45,
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  role = value;
-                                });
-                              },
-                              items: [
-                                DropdownMenuItem(
-                                  value: "Admin",
-                                  child: Text(
-                                    "Admin",
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: "Expense creator",
-                                  child: Text(
-                                    "Expense creator",
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: "Checker",
-                                  child: Text(
-                                    "Checker",
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: "Approver",
-                                  child: Text(
-                                    "Approver",
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              "Forgot Password ?",
-                              style: TextStyle(
-                                  color: Color(0xff083EF6),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: width / 25),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 16.0, left: 16, right: 16, bottom: 8),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  DatabaseService databaseService =
-                                      new DatabaseService();
-                                  Employee employee = new Employee(
-                                    id: id.text,
-                                    name: name.text,
-                                    role: role,
-                                    email: email.text,
-                                  );
-                                  AuthService auth = new AuthService();
-                                  await auth.signUp(
-                                      email.text, pass.text, context);
-                                  await databaseService
-                                      .updateUserData(employee);
-                                  var home =
-                                      await databaseService.getUserHomepage();
-                                  // Future.delayed(
-                                  //   Duration(seconds: 5),
-                                  //   () => showDialog(
-                                  //     context: context,
-                                  //     barrierDismissible: false,
-                                  //     builder: (context) {
-                                  //       return AlertDialog(
-                                  //         content: Center(
-                                  //           child: CircularProgressIndicator(),
-                                  //         ),
-                                  //       );
-                                  //     },
-                                  //   ),
-                                  // );
-
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => home,
+                      child: FutureBuilder(
+                          future: allIds.isEmpty ? fetchIds() : null,
+                          builder: (context, snapshot) {
+                            return SingleChildScrollView(
+                              child: Form(
+                                key: formKey,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Employeee Name",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: width / 25,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  );
-                                },
-                                child: Container(
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                      color: Color(0xff083EF6),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 16.0, right: 16),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          "Sign Up",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: width / 25,
+                                    TextFormField(
+                                      keyboardType: TextInputType.name,
+                                      controller: name,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'Name cannot be empty';
+                                        }
+                                        return null;
+                                      },
+                                      decoration: InputDecoration(
+                                        suffixIcon: Icon(
+                                          Icons.check,
+                                          color: Colors.grey,
+                                        ),
+                                        border: new UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                            color: Color(0xff083EF6),
                                           ),
                                         ),
-                                        Icon(
-                                          Icons.arrow_forward,
-                                          color: Colors.white,
-                                        )
+                                        hintText: "Enter Employee Name",
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      "Employeee id",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: width / 25,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextFormField(
+                                      controller: id,
+                                      validator: (value) {
+                                        if (allIds.contains(value)) {
+                                          return 'Id already exists';
+                                        } else
+                                          return null;
+                                      },
+                                      keyboardType: TextInputType.emailAddress,
+                                      decoration: InputDecoration(
+                                          suffixIcon: Icon(
+                                            Icons.check,
+                                            color: Colors.grey,
+                                          ),
+                                          border: new UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Color(0xff083EF6))),
+                                          hintText: "Enter Employee id"),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      "Employeee email",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: width / 25,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextFormField(
+                                      controller: email,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'Email cannot be empty';
+                                        }
+                                        return null;
+                                      },
+                                      keyboardType: TextInputType.emailAddress,
+                                      decoration: InputDecoration(
+                                        suffixIcon: Icon(
+                                          Icons.check,
+                                          color: Colors.grey,
+                                        ),
+                                        border: new UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                            color: Color(0xff083EF6),
+                                          ),
+                                        ),
+                                        hintText: "Enter Employee email",
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      "Password",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: width / 25,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextFormField(
+                                      controller: pass,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'Password cannot be empty';
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: obsecure,
+                                      decoration: InputDecoration(
+                                          suffixIcon: IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  obsecure =
+                                                      obsecure ? false : true;
+                                                });
+                                              },
+                                              icon: Icon(
+                                                Icons.remove_red_eye,
+                                                color: Colors.grey,
+                                              )),
+                                          border: new UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Color(0xff083EF6))),
+                                          hintText: "Enter Password"),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      "User Category",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: width / 25,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    DropdownButton(
+                                      hint: Text("User Catergory"),
+                                      value: role,
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(38, 50, 56, 0.30),
+                                        fontSize: 15.0,
+                                        fontFamily: "Gilroy",
+                                      ),
+                                      underline: Container(
+                                        height: 2,
+                                        color: Colors.black45,
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          role = value;
+                                        });
+                                      },
+                                      items: [
+                                        DropdownMenuItem(
+                                          value: "Admin",
+                                          child: Text(
+                                            "Admin",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "Expense creator",
+                                          child: Text(
+                                            "Expense creator",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "Checker",
+                                          child: Text(
+                                            "Checker",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "Approver",
+                                          child: Text(
+                                            "Approver",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ),
                                       ],
                                     ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Center(
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SignIn(),
+                                    SizedBox(
+                                      height: 20,
                                     ),
-                                  );
-                                },
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: "Already have Account?",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: width / 27,
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: " Sign In",
-                                        style: TextStyle(
-                                          color: Color(0xff083EF6),
-                                          fontSize: width / 27,
-                                          fontWeight: FontWeight.bold,
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 16.0,
+                                          left: 16,
+                                          right: 16,
+                                          bottom: 8),
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          if (formKey.currentState.validate()) {
+                                            DatabaseService databaseService =
+                                                new DatabaseService();
+                                            Employee employee = new Employee(
+                                              id: id.text,
+                                              name: name.text,
+                                              role: role,
+                                              email: email.text,
+                                            );
+                                            AuthService auth =
+                                                new AuthService();
+                                            await auth.signUp(
+                                                email.text, pass.text, context);
+                                            await databaseService
+                                                .updateUserData(employee);
+                                            var home = await databaseService
+                                                .getUserHomepage();
+
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => home,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 60,
+                                          decoration: BoxDecoration(
+                                              color: Color(0xff083EF6),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 16.0, right: 16),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Sign Up",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: width / 25,
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  Icons.arrow_forward,
+                                                  color: Colors.white,
+                                                )
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    Center(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => SignIn(),
+                                            ),
+                                          );
+                                        },
+                                        child: RichText(
+                                          text: TextSpan(
+                                            text: "Already have Account?",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: width / 27,
+                                            ),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                text: " Sign In",
+                                                style: TextStyle(
+                                                  color: Color(0xff083EF6),
+                                                  fontSize: width / 27,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            );
+                          }),
                     ),
                   ),
                 ),
