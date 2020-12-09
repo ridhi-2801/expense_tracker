@@ -1,3 +1,4 @@
+import 'package:expense_tracker/responsiveScreen.dart';
 import 'package:expense_tracker/screens/confirmation.dart';
 import 'package:expense_tracker/services/db.dart';
 import 'package:expense_tracker/services/models.dart';
@@ -84,7 +85,7 @@ class _CreateCategoryState extends State<CreateCategory> {
                 builder: (context, snapshot) {
                   if (users.isNotEmpty) {
                     return Container(
-                      width: width,
+                      width: ResponsiveWidget.isSmallScreen(context)?width:width/3,
                       height: height / 1.3,
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -96,7 +97,7 @@ class _CreateCategoryState extends State<CreateCategory> {
                                 "Category Name",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: width / 20,
+                                  fontSize: ResponsiveWidget.isSmallScreen(context)?width / 20:width/70,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -126,7 +127,7 @@ class _CreateCategoryState extends State<CreateCategory> {
                                 "Monthly Limit",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: width / 20,
+                                  fontSize: ResponsiveWidget.isSmallScreen(context)?width / 20:width/70,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -175,7 +176,7 @@ class _CreateCategoryState extends State<CreateCategory> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   color: Color(0xff083EF6),
-                                  height: 60,
+                                  height: ResponsiveWidget.isSmallScreen(context)?60:50,
                                   onPressed: () async {
                                     if (formKey.currentState.validate()) {
                                       showDialog(
@@ -211,7 +212,7 @@ class _CreateCategoryState extends State<CreateCategory> {
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: width / 20,
+                                      fontSize: ResponsiveWidget.isSmallScreen(context)?width / 20:width/60,
                                     ),
                                   ),
                                 ),
@@ -246,7 +247,7 @@ class _CreateCategoryState extends State<CreateCategory> {
           "User",
           style: TextStyle(
             color: Colors.black,
-            fontSize: width / 20,
+            fontSize: ResponsiveWidget.isSmallScreen(context)?width/20:width/70,
             fontWeight: FontWeight.bold,
           ),
         ),

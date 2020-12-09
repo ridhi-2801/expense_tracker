@@ -1,3 +1,4 @@
+import 'package:expense_tracker/responsiveScreen.dart';
 import 'package:expense_tracker/services/db.dart';
 import '../services/models.dart';
 import 'package:flutter/material.dart';
@@ -80,12 +81,12 @@ class _CreateTagState extends State<CreateTag> {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.only(top: 56.0, left: 16, right: 16),
+                        const EdgeInsets.only(top: 56.0, left: 16, right: 6),
                     child: Text(
                       "Tag Name",
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: width / 20,
+                        fontSize: ResponsiveWidget.isSmallScreen(context)?width / 20:width/70,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -115,8 +116,8 @@ class _CreateTagState extends State<CreateTag> {
                   ),
                   Center(
                     child: FlatButton(
-                      minWidth: width / 1.5,
-                      height: 60,
+                      minWidth:ResponsiveWidget.isSmallScreen(context)? width / 1.5:width/4,
+                      height: ResponsiveWidget.isSmallScreen(context)?60:50,
                       onPressed: () async {
                         if (formKey.currentState.validate()) {
                           showDialog(
@@ -150,7 +151,7 @@ class _CreateTagState extends State<CreateTag> {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: width / 20,
+                          fontSize: ResponsiveWidget.isSmallScreen(context)?width / 20:width/70,
                         ),
                       ),
                     ),

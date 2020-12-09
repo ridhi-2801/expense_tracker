@@ -1,3 +1,4 @@
+import 'package:expense_tracker/responsiveScreen.dart';
 import 'package:expense_tracker/services/db.dart';
 import 'package:flutter/material.dart';
 import 'confirmation.dart';
@@ -36,8 +37,8 @@ class _AssignUsersState extends State<AssignUsers> {
               users = snap.data.elementAt(1);
             }
             return Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
+              width: width,
+              height: height,
               child: Form(
                 key: formKey,
                 child: Column(
@@ -91,7 +92,7 @@ class _AssignUsersState extends State<AssignUsers> {
                             "Category",
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: width / 20,
+                              fontSize: ResponsiveWidget.isSmallScreen(context)?width / 20:width/70,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -133,48 +134,54 @@ class _AssignUsersState extends State<AssignUsers> {
                             size++;
                           });
                         },
-                        child: Text(
-                          'Add new user +',
-                          textAlign: TextAlign.left,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top:8.0),
+                          child: Text(
+                            'Add new user +',
+                            textAlign: TextAlign.left,
+                          ),
                         ),
                       ),
                     ),
                     Center(
-                      child: FlatButton(
-                        minWidth: width / 1.5,
-                        height: 60,
-                        onPressed: () async {
-                          if (formKey.currentState.validate()) {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              },
-                            );
-                            await databaseService.addUsersToCategory(
-                                chosenUsers, category);
-                            Navigator.pop(context);
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Confirmation(),
-                              ),
-                            );
-                          }
-                        },
-                        color: Color(0xff083EF6),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Text(
-                          "Assign users",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: width / 20,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top:18.0),
+                        child: FlatButton(
+                          minWidth: ResponsiveWidget.isSmallScreen(context)?width / 1.5:width/4,
+                          height: ResponsiveWidget.isSmallScreen(context)?60:50,
+                          onPressed: () async {
+                            if (formKey.currentState.validate()) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                },
+                              );
+                              await databaseService.addUsersToCategory(
+                                  chosenUsers, category);
+                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Confirmation(),
+                                ),
+                              );
+                            }
+                          },
+                          color: Color(0xff083EF6),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Text(
+                            "Assign users",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: ResponsiveWidget.isSmallScreen(context)?width / 20:width/70,
+                            ),
                           ),
                         ),
                       ),
@@ -204,7 +211,7 @@ class _AssignUsersState extends State<AssignUsers> {
           "User",
           style: TextStyle(
             color: Colors.black,
-            fontSize: width / 20,
+            fontSize: ResponsiveWidget.isSmallScreen(context)?width / 20:width/70,
             fontWeight: FontWeight.bold,
           ),
         ),

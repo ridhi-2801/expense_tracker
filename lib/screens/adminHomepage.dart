@@ -1,3 +1,4 @@
+import 'package:expense_tracker/responsiveScreen.dart';
 import 'package:expense_tracker/screens/assignUsers.dart';
 import 'package:expense_tracker/screens/createCategory.dart';
 import 'package:expense_tracker/screens/createTag.dart';
@@ -107,7 +108,7 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                 "Good ${currTime > 5 && currTime < 15 ? 'Morning' : 'Evening'},",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: width / 14,
+                                  fontSize: ResponsiveWidget.isSmallScreen(context)?width / 14:width/50,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -125,7 +126,7 @@ class _AdminHomepageState extends State<AdminHomepage> {
                             '${snapshot.data}',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: width / 14,
+                              fontSize: ResponsiveWidget.isSmallScreen(context)?width / 14:width/50,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -134,10 +135,11 @@ class _AdminHomepageState extends State<AdminHomepage> {
                       ),
                     ),
                   ),
-                  Column(
+                 ResponsiveWidget.isSmallScreen(context)? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                     SizedBox(height: ResponsiveWidget.isSmallScreen(context)?height/6:height/5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -156,7 +158,7 @@ class _AdminHomepageState extends State<AdminHomepage> {
                         ],
                       ),
                       SizedBox(
-                        height: (width - 300) / 3,
+                        height: ResponsiveWidget.isSmallScreen(context)?(width - 300) / 8: width / 25,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -173,8 +175,33 @@ class _AdminHomepageState extends State<AdminHomepage> {
                         ],
                       ),
                     ],
-                  ),
-
+                  ):
+                     Padding(
+                       padding: const EdgeInsets.only(top:250.0),
+                       child: Row(
+                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                         children: [
+                           PositionedCards(
+                             text1: "Create",
+                             text2: "Category",
+                             iconData: Icons.create,
+                             nextScreen: CreateCategory(),
+                           ),
+                           PositionedCards(
+                             text1: "Create",
+                             text2: "Tag",
+                             iconData: FlutterIcons.tag_mco,
+                             nextScreen: CreateTag(),
+                           ),
+                           PositionedCards(
+                             text1: "Assign",
+                             text2: "Users",
+                             iconData: FlutterIcons.people_mdi,
+                             nextScreen: AssignUsers(),
+                           ),
+                         ],
+                       ),
+                     )
                   // Positioned(
                   //   top: height / 1.35,
                   //   left: width / 12,
