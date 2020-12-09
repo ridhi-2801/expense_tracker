@@ -129,7 +129,7 @@ class _ApproverHomepageState extends State<ApproverHomepage> {
                                                 width: width,
                                                 height: height,
                                                 withDecision: true,
-                                                edit: true,
+                                                edit: widget.edit,
                                                 ids: List<String>.from(
                                                   snapshot
                                                       .data.expensesAssigned,

@@ -6,7 +6,6 @@ import 'confirmation.dart';
 
 class CreateTag extends StatefulWidget {
   CreateTag({Key key}) : super(key: key);
-
   @override
   _CreateTagState createState() => _CreateTagState();
 }

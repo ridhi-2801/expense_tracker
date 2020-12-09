@@ -1,5 +1,6 @@
 import 'package:expense_tracker/screens/approverHomePage.dart';
 import 'package:expense_tracker/screens/createExpense.dart';
+import 'package:expense_tracker/screens/viewExpenses.dart';
 import 'package:expense_tracker/services/models.dart';
 import 'package:expense_tracker/shared/drawer.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,8 @@ import 'dart:math' as math;
 import '../services/db.dart';
 
 class ExpenseCreatorHomePage extends StatefulWidget {
+  final bool isApprover;
+  ExpenseCreatorHomePage({@required this.isApprover});
   @override
   _ExpenseCreatorHomePageState createState() => _ExpenseCreatorHomePageState();
 }
@@ -246,7 +249,9 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
                               child: Column(
                                 children: [
                                   Text(
-                                    "Rejected Expenses",
+                                    widget.isApprover
+                                        ? 'Expenses'
+                                        : "Rejected Expenses",
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
@@ -273,7 +278,7 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
                                                 MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Text(
-                                                  'You have ${snapshot.data.expensesAssigned.length} rejected expenses'),
+                                                  'You have ${snapshot.data.expensesAssigned.length} ${widget.isApprover ? '' : 'rejected '}expenses'),
                                               FlatButton(
                                                 height: 45,
                                                 minWidth: width / 2,
@@ -282,17 +287,26 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
                                                       BorderRadius.circular(10),
                                                 ),
                                                 onPressed: () {
+                                                  // Navigator.push(
+                                                  //   context,
+                                                  //   MaterialPageRoute(
+                                                  //     builder: (context) =>
+                                                  //         ApproverHomepage(
+                                                  //       edit: true,
+                                                  //     ),
+                                                  //   ),
+                                                  // );
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          ApproverHomepage(edit: true,),
+                                                          ViewExpenses(expIds: List<String>.from(snapshot.data.expensesAssigned),)
                                                     ),
                                                   );
                                                 },
                                                 color: Color(0xff083EF6),
                                                 child: Text(
-                                                  'View rejected expenses',
+                                                  'View ${widget.isApprover ? '' : 'rejected '} expenses',
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                   ),
@@ -327,67 +341,3 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
     );
   }
 }
-
-// class ExpenseCards extends StatelessWidget {
-//   const ExpenseCards({
-//     Key key,
-//     @required this.height,
-//     @required this.width,
-//     @required this.expense,
-//   }) : super(key: key);
-
-//   final double height;
-//   final double width;
-//   final Expense expense;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: height / 7,
-//       width: width,
-//       decoration: BoxDecoration(
-//         border: Border(
-//           left: BorderSide(
-//             //                   <--- left side
-//             color: Colors.redAccent,
-//             width: 10.0,
-//           ),
-//         ),
-//       ),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           Padding(
-//             padding: const EdgeInsets.only(left: 18.0),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//               children: [
-//                 Text(
-//                   expense?.createdAt ?? '',
-//                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-//                 ),
-//                 Text(
-//                   expense.category,
-//                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-//                 ),
-//                 Text(
-//                   expense.amount.toString(),
-//                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           Text(
-//             "Rejected",
-//             style: TextStyle(
-//               fontWeight: FontWeight.bold,
-//               fontSize: 16,
-//               color: Color(0xfff60808),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

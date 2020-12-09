@@ -39,9 +39,10 @@ class DatabaseService {
     if (role == 'Admin') {
       return AdminHomepage();
     } else if (role == 'Expense creator') {
-      return ExpenseCreatorHomePage();
+      return ExpenseCreatorHomePage(isApprover: false,);
     } else if (role == 'Approver') {
-      return ApproverHomepage(edit: false,);
+      // return ApproverHomepage(edit: false,);
+      return ExpenseCreatorHomePage(isApprover: true,);
     } else
       return BlankScaffold();
   }
@@ -199,7 +200,7 @@ class DatabaseService {
       'Expenses': FieldValue.arrayUnion([expense.id]),
     });
     return expense.id;
-  }  
+  }
 
   Future<String> addExpense(Expense expense) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

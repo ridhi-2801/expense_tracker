@@ -228,7 +228,7 @@ class _SignUpState extends State<SignUp> {
                                       hint: Text("User Catergory"),
                                       value: role,
                                       style: TextStyle(
-                                        color: Color.fromRGBO(38, 50, 56, 0.30),
+                                        color: Colors.black,
                                         fontSize: 15.0,
                                         fontFamily: "Gilroy",
                                       ),
@@ -242,13 +242,6 @@ class _SignUpState extends State<SignUp> {
                                         });
                                       },
                                       items: [
-                                        DropdownMenuItem(
-                                          value: "Admin",
-                                          child: Text(
-                                            "Admin",
-                                            style: TextStyle(fontSize: 15),
-                                          ),
-                                        ),
                                         DropdownMenuItem(
                                           value: "Expense creator",
                                           child: Text(
