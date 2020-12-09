@@ -29,6 +29,7 @@ class Expense {
   double amount;
   String creatorId;
   DateTime createdAt;
+  List comments;
   Expense({
     this.id,
     this.category,
@@ -39,6 +40,7 @@ class Expense {
     this.hasImage,
     this.creatorId,
     this.createdAt,
+    this.comments
   });
   Expense.fromMap(Map data) {
     id = data['id'];

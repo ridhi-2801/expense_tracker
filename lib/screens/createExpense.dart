@@ -38,6 +38,7 @@ class _CreateExpenseState extends State<CreateExpense> {
   bool hasImage = false;
   TextEditingController amountController = new TextEditingController();
   TextEditingController descController = new TextEditingController();
+  TextEditingController commentController = new TextEditingController();
   File _image;
   final picker = ImagePicker();
   String url;
@@ -194,6 +195,18 @@ class _CreateExpenseState extends State<CreateExpense> {
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Amount cannot be empty';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              TextFormField(
+                                controller: commentController,
+                                decoration:
+                                    InputDecoration(labelText: 'Comment'),
+                                keyboardType: TextInputType.multiline,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Comment cannot be empty';
                                   }
                                   return null;
                                 },

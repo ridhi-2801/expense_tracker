@@ -300,7 +300,7 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          ViewExpenses(expIds: List<String>.from(snapshot.data.expensesAssigned),)
+                                                          ViewExpenses(expIds: List<String>.from(snapshot.data.expensesAssigned), isApprover: widget.isApprover,)
                                                     ),
                                                   );
                                                 },
