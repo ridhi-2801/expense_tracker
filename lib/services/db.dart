@@ -39,10 +39,14 @@ class DatabaseService {
     if (role == 'Admin') {
       return AdminHomepage();
     } else if (role == 'Expense creator') {
-      return ExpenseCreatorHomePage(isApprover: false,);
+      return ExpenseCreatorHomePage(
+        isApprover: false,
+      );
     } else if (role == 'Approver') {
       // return ApproverHomepage(edit: false,);
-      return ExpenseCreatorHomePage(isApprover: true,);
+      return ExpenseCreatorHomePage(
+        isApprover: true,
+      );
     } else
       return BlankScaffold();
   }
@@ -258,10 +262,45 @@ class DatabaseService {
     }
     // Send to checker
     else {
-      QuerySnapshot snap =
-          await userRef.where('Employee role', isEqualTo: 'Checker').get();
-      await snap.docs.first.reference.update({
-        'Expenses': FieldValue.arrayUnion([expense.id])
+      // QuerySnapshot snap =
+      //     await userRef.where('Employee role', isEqualTo: 'Checker').get();
+      // await snap.docs.first.reference.update({
+      //   'Expenses': FieldValue.arrayUnion([expense.id])
+      // });
+      final snap = await categoryRef.doc(expense.category).get();
+      int total = snap.data()['Total Expenses'] + 1;
+      // String cat = expense.category.
+      total += 1000;
+      String id = '${expense.category.substring(0, 3)}' + total.toString();
+      Map map = {id: expense.id};
+      try {
+        await FirebaseFirestore.instance
+            .collection('Approved')
+            .doc(expense.category)
+            .update(
+          {
+            'Expenses': FieldValue.arrayUnion(
+              [map],
+            ),
+          },
+        );
+      } catch (e) {
+        await FirebaseFirestore.instance
+            .collection('Approved')
+            .doc(expense.category)
+            .set(
+          {
+            'Expenses': FieldValue.arrayUnion(
+              [map],
+            ),
+          },
+        );
+      }
+      await FirebaseFirestore.instance
+          .collection('categories')
+          .doc(expense.category)
+          .update({
+        'Total Expenses': FieldValue.increment(1),
       });
     }
   }

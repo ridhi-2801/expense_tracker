@@ -201,11 +201,22 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                                       );
                                     },
                                   );
-                                  // await db.rejectExpense(snapshot.data);
-                                  // setState(() {
-                                  //   isDecided[index] = true;
-                                  //   index++;
-                                  // });
+                                  edit
+                                      ? Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => CreateExpense(
+                                              amount: widget.expense.amount,
+                                              tags: widget.expense.tags,
+                                              id: widget.expense.id,
+                                              category: widget.expense.category,
+                                              hasImage: widget.expense.hasImage,
+                                              description:
+                                                  widget.expense.description,
+                                            ),
+                                          ),
+                                        )
+                                      : await db.rejectExpense(widget.expense);
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(
                                     context,
@@ -248,11 +259,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                                 );
                               },
                             );
-                            // await db.approveExpense(snapshot.data);
-                            // setState(() {
-                            //   isDecided[index] = true;
-                            //   index++;
-                            // });
+                            await db.approveExpense(widget.expense);
                             Navigator.pop(context);
                             Navigator.pushReplacement(
                               context,

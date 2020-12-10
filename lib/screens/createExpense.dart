@@ -2,8 +2,11 @@ import 'dart:io';
 import 'package:expense_tracker/screens/confirmation.dart';
 import 'package:expense_tracker/services/db.dart';
 import 'package:expense_tracker/services/models.dart';
+// import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreateExpense extends StatefulWidget {
@@ -40,6 +43,7 @@ class _CreateExpenseState extends State<CreateExpense> {
   TextEditingController descController = new TextEditingController();
   TextEditingController commentController = new TextEditingController();
   File _image;
+  Image webImage;
   final picker = ImagePicker();
   String url;
   double height, width;
@@ -62,7 +66,7 @@ class _CreateExpenseState extends State<CreateExpense> {
     tags = await databaseService.getAllTags();
     if (widget.id != null) {
       url = await databaseService.getUrl(widget.id);
-      // _image = 
+      // _image =
     }
   }
 
@@ -236,9 +240,11 @@ class _CreateExpenseState extends State<CreateExpense> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 color: Color(0xff083EF6),
-                                onPressed: hasImage && _image == null && widget.id == null
+                                onPressed: hasImage &&
+                                        _image == null &&
+                                        widget.id == null
                                     ? () async {
-                                        await getImage();
+                                          await getImage();
                                       }
                                     : () async {
                                         if (formKey.currentState.validate()) {
@@ -287,7 +293,8 @@ class _CreateExpenseState extends State<CreateExpense> {
                                         }
                                       },
                                 child: Text(
-                                  hasImage && (_image == null && widget.id == null)
+                                  hasImage &&
+                                          (_image == null && widget.id == null)
                                       ? 'Click image'
                                       : 'Proceed',
                                   style: TextStyle(color: Colors.white),
@@ -350,8 +357,17 @@ class _CreateExpenseState extends State<CreateExpense> {
     );
   }
 
+  // Future getImageForWeb(BuildContext context) async {
+  //   FilePickerResult result = await FilePicker.platform.pickFiles();
+  //   if (result != null) {
+  //     // print(result.files.first.bytes);
+  //     Image img = Image.memory(result.files.first.bytes);
+  //     _image = File.fromRawPath(result.files.first.bytes);
+  //   }
+  // }
+
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {

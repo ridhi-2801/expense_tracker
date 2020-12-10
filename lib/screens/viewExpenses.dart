@@ -17,6 +17,7 @@ class ViewExpenses extends StatefulWidget {
 class _ViewExpensesState extends State<ViewExpenses> {
   List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
   List<Expense> expenses = new List<Expense>();
+  List<Expense> searchedExpenses = new List<Expense>();
   DatabaseService db = new DatabaseService();
   final AsyncMemoizer _memoizer = AsyncMemoizer();
   RefreshController _refreshController =
@@ -38,6 +39,7 @@ class _ViewExpensesState extends State<ViewExpenses> {
         Expense temp = await db.getExpense(widget.expIds[i]);
         expenses.add(temp);
       }
+      searchedExpenses.addAll(expenses);
     });
   }
 
@@ -51,6 +53,7 @@ class _ViewExpensesState extends State<ViewExpenses> {
     // monitor network fetch
     Expense temp = await db.getExpense(widget.expIds[index]);
     expenses.add(temp);
+    searchedExpenses.add(temp);
     index++;
 
     // if failed,use loadFailed(),if no data
@@ -62,7 +65,26 @@ class _ViewExpensesState extends State<ViewExpenses> {
     }
   }
 
+  void filterSearchResult(String query) {
+    if (query.isNotEmpty) {
+      searchedExpenses.clear();
+      for (var expense in expenses) {
+        if (expense.category.toLowerCase().contains(query.toLowerCase())) {
+          searchedExpenses.add(expense);
+        }
+        setState(() {});
+      }
+    }
+    if (query.isEmpty && searchedExpenses.isEmpty) {
+      setState(() {
+        searchedExpenses.clear();
+        searchedExpenses.addAll(expenses);
+      });
+    }
+  }
+
   double height, width;
+  TextEditingController controller = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -104,12 +126,47 @@ class _ViewExpensesState extends State<ViewExpenses> {
               child: ListView.builder(
                 itemBuilder: (c, i) => Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: ExpenseCards(
-                    height: height,
-                    width: width,
-                    expense: expenses[i],
-                    edit: !widget.isApprover,
-                  ),
+                  child: i == 0
+                      ? TextField(
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          onChanged: (value) {
+                            filterSearchResult(value);
+                          },
+                          controller: controller,
+                          decoration: InputDecoration(
+                              hintStyle: TextStyle(color: Colors.white54),
+                              labelStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w300),
+                              filled: true,
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              fillColor: Colors.blue[700],
+                              labelText: "Search by category",
+                              hintText: "Search",
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30)),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(0.0)),
+                                borderSide: BorderSide(color: Colors.black54),
+                              )),
+                        )
+                      : ExpenseCards(
+                          height: height,
+                          width: width,
+                          expense: searchedExpenses[i - 1],
+                          edit: !widget.isApprover,
+                        ),
                 ),
                 // Padding(
                 //   padding: const EdgeInsets.all(8.0),
@@ -122,7 +179,7 @@ class _ViewExpensesState extends State<ViewExpenses> {
                 //   ),
                 // ),
                 itemExtent: 100.0,
-                itemCount: expenses.length,
+                itemCount: searchedExpenses.length + 1,
               ),
             );
           } else {
@@ -201,7 +258,7 @@ class _ExpenseCardsState extends State<ExpenseCards> {
                     children: [
                       for (var tag in widget.expense.tags)
                         Text(
-                          tag,
+                          widget.expense.tags.length > 1 ? '$tag, ' : tag,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,

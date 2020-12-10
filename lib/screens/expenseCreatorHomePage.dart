@@ -1,4 +1,3 @@
-import 'package:expense_tracker/screens/approverHomePage.dart';
 import 'package:expense_tracker/screens/createExpense.dart';
 import 'package:expense_tracker/screens/viewExpenses.dart';
 import 'package:expense_tracker/services/models.dart';
