@@ -1,3 +1,4 @@
+import 'package:expense_tracker/responsiveScreen.dart';
 import 'package:expense_tracker/services/models.dart';
 import 'package:expense_tracker/shared/drawer.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,7 @@ class _ApproverHomepageState extends State<ApproverHomepage> {
                           "Good ${currTime > 5 && currTime < 15 ? 'Morning' : 'Evening'},",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: width / 16,
+                            fontSize: ResponsiveWidget.isSmallScreen(context)?width/16:width/60,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -79,7 +80,7 @@ class _ApproverHomepageState extends State<ApproverHomepage> {
                           snapshot.data,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: width / 18,
+                            fontSize: ResponsiveWidget.isSmallScreen(context)?width/16:width/60,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
