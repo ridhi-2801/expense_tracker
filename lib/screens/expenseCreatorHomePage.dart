@@ -5,6 +5,7 @@ import 'package:expense_tracker/shared/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import '../responsiveScreen.dart';
 import '../services/db.dart';
 
 class ExpenseCreatorHomePage extends StatefulWidget {
@@ -83,7 +84,7 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
                                       "Good ${currTime > 5 && currTime < 15 ? 'Morning' : 'Evening'},",
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: width / 14,
+                                        fontSize: ResponsiveWidget.isSmallScreen(context)?width/16:width/50,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -101,7 +102,7 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
                                   snapshot.data,
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: width / 14,
+                                      fontSize: ResponsiveWidget.isSmallScreen(context)?width/16:width/60,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -136,109 +137,111 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
                                 ),
                                 child: Form(
                                   key: formKey,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Create Expenses",
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        "Description",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Container(
-                                        width: width / 2,
-                                        child: TextFormField(
-                                          controller: descController,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Description cannot be empty';
-                                            } else {
-                                              return null;
-                                            }
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText: "Description",
-                                          ),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Create Expenses",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        "Expenses Amount",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
+                                        SizedBox(
+                                          height: 20,
                                         ),
-                                      ),
-                                      Container(
-                                        width: width / 2,
-                                        child: TextFormField(
-                                          keyboardType: TextInputType.number,
-                                          controller: amountController,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Amount cannot be empty';
-                                            } else {
-                                              return null;
-                                            }
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText: "Enter Amount",
-                                          ),
+                                        Text(
+                                          "Description",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Center(
-                                        child: FlatButton(
-                                          height: 45,
-                                          minWidth: width / 2,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          onPressed: () async {
-                                            if (formKey.currentState
-                                                .validate()) {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CreateExpense(
-                                                    description:
-                                                        descController.text,
-                                                    amount: double.parse(
-                                                        amountController.text),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          color: Color(0xff083EF6),
-                                          child: Text(
-                                            "Next",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
+                                        Container(
+                                          width: width / 2,
+                                          child: TextFormField(
+                                            controller: descController,
+                                            validator: (value) {
+                                              if (value.isEmpty) {
+                                                return 'Description cannot be empty';
+                                              } else {
+                                                return null;
+                                              }
+                                            },
+                                            decoration: InputDecoration(
+                                              hintText: "Description",
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          "Expenses Amount",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Container(
+                                          width: width / 2,
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            controller: amountController,
+                                            validator: (value) {
+                                              if (value.isEmpty) {
+                                                return 'Amount cannot be empty';
+                                              } else {
+                                                return null;
+                                              }
+                                            },
+                                            decoration: InputDecoration(
+                                              hintText: "Enter Amount",
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Center(
+                                          child: FlatButton(
+                                            height: 45,
+                                            minWidth: width / 2,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            onPressed: () async {
+                                              if (formKey.currentState
+                                                  .validate()) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CreateExpense(
+                                                      description:
+                                                          descController.text,
+                                                      amount: double.parse(
+                                                          amountController.text),
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            color: Color(0xff083EF6),
+                                            child: Text(
+                                              "Next",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
