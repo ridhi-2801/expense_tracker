@@ -241,17 +241,20 @@ class _AdminHomepageState extends State<AdminHomepage> {
                       padding: const EdgeInsets.only(top:68.0),
                       child: Align(
                         alignment: Alignment.bottomCenter,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color:Color(0xff083EF6),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          width: width/4,
+                        child: GestureDetector(
+                          onTap: (){},
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color:Color(0xff083EF6),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            width: width/4,
 
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("Change Priorities",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w400),),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("Change Priorities",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w400),),
+                              ),
                             ),
                           ),
                         ),
