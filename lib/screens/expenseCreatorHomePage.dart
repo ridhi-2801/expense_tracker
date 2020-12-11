@@ -263,6 +263,7 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
                                   ),
                                   FutureBuilder<Employee>(
                                     future: databaseService.getUserData(),
+                                    initialData: Employee(expensesAssigned: []),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                               ConnectionState.done &&
@@ -270,7 +271,7 @@ class _ExpenseCreatorHomePageState extends State<ExpenseCreatorHomePage> {
                                                   .length ==
                                               0) {
                                         return Center(
-                                          child: Text('No rejected expenses'),
+                                          child: Text('No expenses'),
                                         );
                                       } else if (snapshot.hasData) {
                                         return Container(

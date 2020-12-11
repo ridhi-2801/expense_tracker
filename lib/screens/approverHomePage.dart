@@ -40,86 +40,92 @@ class _ApproverHomepageState extends State<ApproverHomepage> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 99.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Transform.rotate(
-                          angle: math.pi / 2,
-                          child: IconButton(
-                            alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.all(0),
-                            icon: Icon(Icons.bar_chart_outlined),
-                            onPressed: () {
-                              key.currentState.openDrawer();
-                            },
-                            iconSize: 50,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16.0, right: 25),
-                        child: Text(
-                          "Good ${currTime > 5 && currTime < 15 ? 'Morning' : 'Evening'},",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: ResponsiveWidget.isSmallScreen(context)?width/16:width/60,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16.0),
-                        child: Text(
-                          snapshot.data,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: ResponsiveWidget.isSmallScreen(context)?width/16:width/60,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 60),
-                        child: Container(
-                          width: width,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(30),
-                                topLeft: Radius.circular(30)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(32.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Expenses",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                      fontSize: 25),
-                                ),
-                                SizedBox(
-                                  height: 40,
-                                ),
-                                ExpenseDetails(
-                                  expense: widget.expense,
-                                ),
-                              ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Transform.rotate(
+                            angle: math.pi / 2,
+                            child: IconButton(
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.all(0),
+                              icon: Icon(Icons.bar_chart_outlined),
+                              onPressed: () {
+                                key.currentState.openDrawer();
+                              },
+                              iconSize: 50,
+                              color: Colors.white,
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0, right: 25),
+                          child: Text(
+                            "Good ${currTime > 5 && currTime < 15 ? 'Morning' : 'Evening'},",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: ResponsiveWidget.isSmallScreen(context)
+                                  ? width / 16
+                                  : width / 60,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: Text(
+                            snapshot.data,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: ResponsiveWidget.isSmallScreen(context)
+                                  ? width / 16
+                                  : width / 60,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 60),
+                          child: Container(
+                            width: width,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(30),
+                                  topLeft: Radius.circular(30)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(32.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Expenses",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontSize: 25),
+                                  ),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  ExpenseDetails(
+                                    expense: widget.expense,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

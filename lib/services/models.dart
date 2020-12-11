@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Employee {
   String id;
   String name;
@@ -9,6 +11,7 @@ class Employee {
     this.name,
     this.role,
     this.email,
+    this.expensesAssigned,
   });
   Employee.fromMap(Map data) {
     id = data['Employee Id'];
@@ -30,18 +33,17 @@ class Expense {
   String creatorId;
   DateTime createdAt;
   List comments;
-  Expense({
-    this.id,
-    this.category,
-    this.tags,
-    this.description,
-    this.imageName,
-    this.amount,
-    this.hasImage,
-    this.creatorId,
-    this.createdAt,
-    this.comments
-  });
+  Expense(
+      {this.id,
+      this.category,
+      this.tags,
+      this.description,
+      this.imageName,
+      this.amount,
+      this.hasImage,
+      this.creatorId,
+      this.createdAt,
+      this.comments});
   Expense.fromMap(Map data) {
     id = data['id'];
     amount = data['Amount'];
@@ -52,6 +54,7 @@ class Expense {
     print(data['Created at'].runtimeType);
     createdAt = DateTime.parse(data['Created at'].toDate().toString());
     creatorId = data['Creator Id'];
+    comments = data['Comments'];
   }
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = new Map();
@@ -87,4 +90,13 @@ class Category {
 class Tag {
   String tagName;
   Tag({this.tagName});
+}
+
+class Comment {
+  static const TAG = 'Comment';
+
+  String userName;
+  String content;
+
+  Comment({@required this.userName, @required this.content});
 }

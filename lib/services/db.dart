@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expense_tracker/screens/approverHomePage.dart';
 import 'package:expense_tracker/screens/adminHomepage.dart';
 import 'package:expense_tracker/screens/blankScaffold.dart';
 import 'package:expense_tracker/services/models.dart';
@@ -187,9 +186,11 @@ class DatabaseService {
     }
   }
 
-  Future<String> editExpense(Expense expense) async {
+  Future<String> editExpense(Expense expense, String comment) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String id = prefs.getString('Id');
+    String username = await getUserName();
+    Map map = {username: comment};
     expensesRef.doc(expense.id).update({
       'Category': expense.category,
       'Amount': expense.amount,
@@ -198,6 +199,7 @@ class DatabaseService {
       'hasImage': expense.hasImage,
       'Creator Id': id,
       'Created at': DateTime.now(),
+      'Comments': FieldValue.arrayUnion([map]),
     });
     Category temp = await readCategory(expense.category);
     await userRef.doc(temp.users.first).update({
@@ -206,9 +208,11 @@ class DatabaseService {
     return expense.id;
   }
 
-  Future<String> addExpense(Expense expense) async {
+  Future<String> addExpense(Expense expense, String comment) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String id = prefs.getString('Id');
+    String username = await getUserName();
+    Map map = {username: comment};
     DocumentReference ref = await expensesRef.add({
       'Category': expense.category,
       'Amount': expense.amount,
@@ -217,6 +221,7 @@ class DatabaseService {
       'hasImage': expense.hasImage,
       'Creator Id': id,
       'Created at': DateTime.now(),
+      'Comments': FieldValue.arrayUnion([map]),
     });
     Category temp = await readCategory(expense.category);
     await userRef.doc(temp.users.first).update({
@@ -245,7 +250,17 @@ class DatabaseService {
     return Expense.fromMap(map);
   }
 
-  Future<void> approveExpense(Expense expense) async {
+  Future<void> addComment(String comment, String id) async {
+    String username = await getUserName();
+    Map map = {username: comment};
+    await expensesRef.doc(id).update({
+      'Comments': FieldValue.arrayUnion(
+        [map],
+      ),
+    });
+  }
+
+  Future<void> approveExpense(Expense expense, String comment) async {
     DocumentSnapshot snap = await categoryRef.doc(expense.category).get();
     List users = snap.data()['Users'];
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -303,9 +318,10 @@ class DatabaseService {
         'Total Expenses': FieldValue.increment(1),
       });
     }
+    await addComment(comment, expense.id);
   }
 
-  Future<void> rejectExpense(Expense expense) async {
+  Future<void> rejectExpense(Expense expense, String comment) async {
     DocumentSnapshot snap = await categoryRef.doc(expense.category).get();
     List users = snap.data()['Users'];
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -325,6 +341,7 @@ class DatabaseService {
         'Expenses': FieldValue.arrayUnion([expense.id])
       });
     }
+    await addComment(comment, expense.id);
   }
 
   Future<String> getUrl(String id) async {

@@ -1,4 +1,3 @@
-import 'package:expense_tracker/main.dart';
 import 'package:expense_tracker/services/auth.dart';
 import 'package:expense_tracker/services/models.dart';
 import 'package:flutter/material.dart';

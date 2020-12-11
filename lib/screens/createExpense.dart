@@ -272,9 +272,9 @@ class _CreateExpenseState extends State<CreateExpense> {
 
                                           String id = widget.id == null
                                               ? await databaseService
-                                                  .addExpense(expense)
+                                                  .addExpense(expense, commentController.text)
                                               : await databaseService
-                                                  .editExpense(expense);
+                                                  .editExpense(expense, commentController.text);
                                           if (_image != null) {
                                             await FirebaseStorage.instance
                                                 .ref(id)
