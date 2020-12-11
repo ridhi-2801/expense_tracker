@@ -328,32 +328,42 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                             ),
                         ],
                         treeThemeData: TreeThemeData(
-                            lineColor: Colors.amber, lineWidth: 3),
+                            lineColor: Color(0xff083EF6), lineWidth: 3),
                         avatarRoot: (context, Comment data) => PreferredSize(
                           child: CircleAvatar(
-                            radius: 24,
-                            backgroundColor: Colors.grey,
-                            child: Text(
-                              data.userName.substring(0, 1).toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 22,
+                            radius: 26,
+                            backgroundColor: Color(0xff083EF6),
+                            child: CircleAvatar(
+                              radius: 24,
+                              backgroundColor: Colors.white,
+                              child: Text(
+                                data.userName.substring(0, 1).toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold
+                                ),
                               ),
+                              foregroundColor: Colors.black
                             ),
-                            foregroundColor: Colors.amber,
                           ),
                           preferredSize: Size.fromRadius(18),
                         ),
                         avatarChild: (context, Comment data) => PreferredSize(
                           child: CircleAvatar(
-                            radius: 18,
-                            backgroundColor: Colors.grey,
-                            child: Text(
-                              data.userName.substring(0, 1).toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 16,
+                            radius: 20,
+                            backgroundColor: Color(0xff083EF6),
+                            child: CircleAvatar(
+                              radius: 18,
+                              backgroundColor: Colors.white,
+                              child: Text(
+                                data.userName.substring(0, 1).toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                    fontWeight: FontWeight.bold
+                                ),
                               ),
+                              foregroundColor: Colors.black,
                             ),
-                            foregroundColor: Colors.amber,
                           ),
                           preferredSize: Size.fromRadius(12),
                         ),
@@ -365,8 +375,12 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                                 padding: EdgeInsets.symmetric(
                                     vertical: 8, horizontal: 8),
                                 decoration: BoxDecoration(
-                                    color: Colors.grey[100],
-                                    borderRadius: BorderRadius.circular(12)),
+                                    color: Colors.white,
+                          boxShadow: [new BoxShadow(
+                          color: Color(0xff083EF6),
+                          blurRadius: 3.0,
+                          ),],
+                                    borderRadius: BorderRadius.only(topRight:Radius.circular(12),topLeft: Radius.circular(12),bottomRight: Radius.circular(12))),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -407,10 +421,14 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                             children: [
                               Container(
                                 padding: EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 8),
+                                    vertical: 8, horizontal: 12),
                                 decoration: BoxDecoration(
-                                    color: Colors.grey[100],
-                                    borderRadius: BorderRadius.circular(12)),
+                          color: Colors.white,
+                          boxShadow: [new BoxShadow(
+                          color: Color(0xff083EF6),
+                          blurRadius: 5.0,
+                          ),],
+                                    borderRadius: BorderRadius.only(topRight:Radius.circular(12),topLeft: Radius.circular(12),bottomRight: Radius.circular(12))),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -420,7 +438,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                                           .textTheme
                                           .caption
                                           .copyWith(
-                                              fontWeight: FontWeight.w600,
+                                              fontWeight: FontWeight.w800,
                                               color: Colors.black,
                                               fontSize: 16),
                                     ),
@@ -433,8 +451,8 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                                           .textTheme
                                           .caption
                                           .copyWith(
-                                            fontWeight: FontWeight.w300,
-                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff083EF6),
                                             fontSize: 14,
                                           ),
                                     ),
