@@ -71,42 +71,65 @@ class _AdminHomepageState extends State<AdminHomepage> {
                 isLoaded = true;
               }
               return SingleChildScrollView(
-                child: Stack(
-                  overflow: Overflow.visible,
-                  // alignment: Alignment.center,
+                child: Column(
                   children: [
-                    Container(
-                      height: height / 2.3,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xff008DFF), Color(0xff083EF6)],
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            right: 16, left: 16, top: 100),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Transform.rotate(
-                              angle: math.pi / 2,
-                              child: IconButton(
-                                alignment: Alignment.centerLeft,
-                                padding: EdgeInsets.all(0),
-                                icon: Icon(Icons.bar_chart_outlined),
-                                onPressed: () {
-                                  _scaffoldKey.currentState.openDrawer();
-                                },
-                                iconSize: 50,
-                                color: Colors.white,
-                              ),
+                    Stack(
+                      overflow: Overflow.visible,
+                      // alignment: Alignment.center,
+                      children: [
+                        Container(
+                          height: height / 2.3,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xff008DFF), Color(0xff083EF6)],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                right: 16, left: 16, top: 100),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Transform.rotate(
+                                  angle: math.pi / 2,
+                                  child: IconButton(
+                                    alignment: Alignment.centerLeft,
+                                    padding: EdgeInsets.all(0),
+                                    icon: Icon(Icons.bar_chart_outlined),
+                                    onPressed: () {
+                                      _scaffoldKey.currentState.openDrawer();
+                                    },
+                                    iconSize: 50,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Good ${currTime > 5 && currTime < 15 ? 'Morning' : 'Evening'},",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            ResponsiveWidget.isSmallScreen(context)
+                                                ? width / 14
+                                                : width / 50,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    CircleAvatar(
+                                      radius: 30,
+                                      backgroundColor: Colors.white,
+                                      child: CircleAvatar(
+                                        radius: 25,
+                                        foregroundColor: Colors.blue,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 Text(
-                                  "Good ${currTime > 5 && currTime < 15 ? 'Morning' : 'Evening'},",
+                                  '${snapshot.data}',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize:
@@ -116,119 +139,124 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor: Colors.white,
-                                  child: CircleAvatar(
-                                    radius: 25,
-                                    foregroundColor: Colors.blue,
-                                  ),
-                                ),
+                                //    SizedBox(height: height/5,)
                               ],
                             ),
-                            Text(
-                              '${snapshot.data}',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize:
-                                    ResponsiveWidget.isSmallScreen(context)
-                                        ? width / 14
-                                        : width / 50,
-                                fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        ResponsiveWidget.isSmallScreen(context)
+                            ? Padding(
+                              padding: const EdgeInsets.only(top:158.0),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                        height:
+                                            ResponsiveWidget.isSmallScreen(context)
+                                                ? height / 6
+                                                : height / 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        PositionedCards(
+                                          text1: "Create",
+                                          text2: "Category",
+                                          iconData: Icons.create,
+                                          nextScreen: CreateCategory(),
+                                        ),
+                                        PositionedCards(
+                                          text1: "Create",
+                                          text2: "Tag",
+                                          iconData: FlutterIcons.tag_mco,
+                                          nextScreen: CreateTag(),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: ResponsiveWidget.isSmallScreen(context)
+                                          ? (width - 300) / 10
+                                          : width / 25,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        PositionedCards(
+                                          text1: "Assign",
+                                          text2: "Users",
+                                          iconData: FlutterIcons.people_mdi,
+                                          nextScreen: AssignUsers(),
+                                        ),
+                                        SizedBox(
+                                          width: 150,
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                            )
+                            : Padding(
+                                padding: const EdgeInsets.only(top: 250.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    PositionedCards(
+                                      text1: "Create",
+                                      text2: "Category",
+                                      iconData: Icons.create,
+                                      nextScreen: CreateCategory(),
+                                    ),
+                                    PositionedCards(
+                                      text1: "Create",
+                                      text2: "Tag",
+                                      iconData: FlutterIcons.tag_mco,
+                                      nextScreen: CreateTag(),
+                                    ),
+                                    PositionedCards(
+                                      text1: "Assign",
+                                      text2: "Users",
+                                      iconData: FlutterIcons.people_mdi,
+                                      nextScreen: AssignUsers(),
+                                    ),
+                                  ],
+                                ),
                               ),
+
+                        // Positioned(
+                        //   top: height / 1.35,
+                        //   left: width / 12,
+                        //   child: Text(
+                        //     "Categories",
+                        //     style: TextStyle(
+                        //       fontWeight: FontWeight.bold,
+                        //       fontSize: 25,
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top:68.0),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color:Color(0xff083EF6),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          width: width/4,
+
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("Change Priorities",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w400),),
                             ),
-                            //    SizedBox(height: height/5,)
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                    ResponsiveWidget.isSmallScreen(context)
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                  height:
-                                      ResponsiveWidget.isSmallScreen(context)
-                                          ? height / 6
-                                          : height / 5),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  PositionedCards(
-                                    text1: "Create",
-                                    text2: "Category",
-                                    iconData: Icons.create,
-                                    nextScreen: CreateCategory(),
-                                  ),
-                                  PositionedCards(
-                                    text1: "Create",
-                                    text2: "Tag",
-                                    iconData: FlutterIcons.tag_mco,
-                                    nextScreen: CreateTag(),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: ResponsiveWidget.isSmallScreen(context)
-                                    ? (width - 300) / 8
-                                    : width / 25,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  PositionedCards(
-                                    text1: "Assign",
-                                    text2: "Users",
-                                    iconData: FlutterIcons.people_mdi,
-                                    nextScreen: AssignUsers(),
-                                  ),
-                                  SizedBox(
-                                    width: 150,
-                                  )
-                                ],
-                              ),
-                            ],
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.only(top: 250.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                PositionedCards(
-                                  text1: "Create",
-                                  text2: "Category",
-                                  iconData: Icons.create,
-                                  nextScreen: CreateCategory(),
-                                ),
-                                PositionedCards(
-                                  text1: "Create",
-                                  text2: "Tag",
-                                  iconData: FlutterIcons.tag_mco,
-                                  nextScreen: CreateTag(),
-                                ),
-                                PositionedCards(
-                                  text1: "Assign",
-                                  text2: "Users",
-                                  iconData: FlutterIcons.people_mdi,
-                                  nextScreen: AssignUsers(),
-                                ),
-                              ],
-                            ),
-                          )
-                    // Positioned(
-                    //   top: height / 1.35,
-                    //   left: width / 12,
-                    //   child: Text(
-                    //     "Categories",
-                    //     style: TextStyle(
-                    //       fontWeight: FontWeight.bold,
-                    //       fontSize: 25,
-                    //     ),
-                    //   ),
-                    // ),
+                    )
                   ],
                 ),
               );
