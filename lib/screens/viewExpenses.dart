@@ -15,7 +15,6 @@ class ViewExpenses extends StatefulWidget {
 }
 
 class _ViewExpensesState extends State<ViewExpenses> {
-  List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
   List<Expense> expenses = new List<Expense>();
   List<Expense> searchedExpenses = new List<Expense>();
   DatabaseService db = new DatabaseService();
@@ -97,7 +96,7 @@ class _ViewExpensesState extends State<ViewExpenses> {
       body: FutureBuilder(
         future: fetchExpense(),
         builder: (context, snapshot) {
-          if (expenses.length >= 8) {
+          if (expenses.length >= max) {
             return SmartRefresher(
               enablePullUp: true,
               footer: CustomFooter(
