@@ -40,7 +40,9 @@ dependencies:
   pull_to_refresh: ^1.6.3
   # file_picker: ^2.1.0
   path_provider: ^1.6.24
+  drag_and_drop_lists: ^0.2.9+2
   comment_tree: ^0.1.2
+  dotted_border: ^1.0.7
 
 dev_dependencies:
   flutter_test:

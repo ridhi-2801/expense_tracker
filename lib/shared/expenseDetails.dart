@@ -172,24 +172,20 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                     ),
                   ],
                 ),
-                edit
-                    ? Container()
-                    : Form(
-                        key: formkey,
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Add comment',
-                            hintText: 'Comment',
-                            alignLabelWithHint: true,
-                          ),
-                          controller: comment,
-                          validator: (value) {
-                            return value.isEmpty
-                                ? 'Comment cannot be empty'
-                                : null;
-                          },
-                        ),
-                      ),
+                Form(
+                  key: formkey,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Add comment',
+                      hintText: 'Comment',
+                      alignLabelWithHint: true,
+                    ),
+                    controller: comment,
+                    validator: (value) {
+                      return value.isEmpty ? 'Comment cannot be empty' : null;
+                    },
+                  ),
+                ),
                 Column(
                   children: [
                     SizedBox(height: 70),
@@ -227,7 +223,8 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                                         );
                                       },
                                     );
-                                    await db.rejectExpense(widget.expense, comment.text);
+                                    await db.rejectExpense(
+                                        widget.expense, comment.text);
                                     Navigator.pop(context);
                                     Navigator.pushReplacement(
                                       context,
@@ -272,7 +269,8 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                                   );
                                 },
                               );
-                              await db.approveExpense(widget.expense, comment.text);
+                              await db.approveExpense(
+                                  widget.expense, comment.text);
                               Navigator.pop(context);
                               Navigator.pushReplacement(
                                 context,
@@ -334,17 +332,15 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                             radius: 26,
                             backgroundColor: Color(0xff083EF6),
                             child: CircleAvatar(
-                              radius: 24,
-                              backgroundColor: Colors.white,
-                              child: Text(
-                                data.userName.substring(0, 1).toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold
+                                radius: 24,
+                                backgroundColor: Colors.white,
+                                child: Text(
+                                  data.userName.substring(0, 1).toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                              foregroundColor: Colors.black
-                            ),
+                                foregroundColor: Colors.black),
                           ),
                           preferredSize: Size.fromRadius(18),
                         ),
@@ -358,9 +354,7 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                               child: Text(
                                 data.userName.substring(0, 1).toUpperCase(),
                                 style: TextStyle(
-                                  fontSize: 16,
-                                    fontWeight: FontWeight.bold
-                                ),
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               foregroundColor: Colors.black,
                             ),
@@ -376,11 +370,16 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                                     vertical: 8, horizontal: 8),
                                 decoration: BoxDecoration(
                                     color: Colors.white,
-                          boxShadow: [new BoxShadow(
-                          color: Color(0xff083EF6),
-                          blurRadius: 3.0,
-                          ),],
-                                    borderRadius: BorderRadius.only(topRight:Radius.circular(12),topLeft: Radius.circular(12),bottomRight: Radius.circular(12))),
+                                    boxShadow: [
+                                      new BoxShadow(
+                                        color: Color(0xff083EF6),
+                                        blurRadius: 3.0,
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(12),
+                                        topLeft: Radius.circular(12),
+                                        bottomRight: Radius.circular(12))),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -423,12 +422,17 @@ class _ExpenseDetailsState extends State<ExpenseDetails> {
                                 padding: EdgeInsets.symmetric(
                                     vertical: 8, horizontal: 12),
                                 decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [new BoxShadow(
-                          color: Color(0xff083EF6),
-                          blurRadius: 5.0,
-                          ),],
-                                    borderRadius: BorderRadius.only(topRight:Radius.circular(12),topLeft: Radius.circular(12),bottomRight: Radius.circular(12))),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      new BoxShadow(
+                                        color: Color(0xff083EF6),
+                                        blurRadius: 5.0,
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(12),
+                                        topLeft: Radius.circular(12),
+                                        bottomRight: Radius.circular(12))),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

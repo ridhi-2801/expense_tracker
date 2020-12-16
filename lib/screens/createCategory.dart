@@ -1,5 +1,5 @@
 import 'package:expense_tracker/responsiveScreen.dart';
-import 'package:expense_tracker/screens/confirmation.dart';
+import 'package:expense_tracker/screens/setLimits.dart';
 import 'package:expense_tracker/services/db.dart';
 import 'package:expense_tracker/services/models.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +20,7 @@ class _CreateCategoryState extends State<CreateCategory> {
   TextEditingController nameController = new TextEditingController();
   TextEditingController amountController = new TextEditingController();
   double width, height;
+  List<String> categories = new List<String>();
 
   @override
   void initState() {
@@ -28,6 +29,7 @@ class _CreateCategoryState extends State<CreateCategory> {
 
   Future<void> fetchUsers() async {
     users = await databaseService.getAllIds();
+    categories = await databaseService.getAllCategories();
   }
 
   @override
@@ -81,11 +83,14 @@ class _CreateCategoryState extends State<CreateCategory> {
                 ),
               ),
               FutureBuilder(
-                future: users.isEmpty ? fetchUsers() : null,
+                future:
+                    users.isEmpty || categories.isEmpty ? fetchUsers() : null,
                 builder: (context, snapshot) {
-                  if (users.isNotEmpty) {
+                  if (users.isNotEmpty && categories.isNotEmpty) {
                     return Container(
-                      width: ResponsiveWidget.isSmallScreen(context)?width:width/3,
+                      width: ResponsiveWidget.isSmallScreen(context)
+                          ? width
+                          : width / 3,
                       height: height / 1.3,
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -97,7 +102,10 @@ class _CreateCategoryState extends State<CreateCategory> {
                                 "Category Name",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: ResponsiveWidget.isSmallScreen(context)?width / 20:width/70,
+                                  fontSize:
+                                      ResponsiveWidget.isSmallScreen(context)
+                                          ? width / 20
+                                          : width / 70,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -115,6 +123,8 @@ class _CreateCategoryState extends State<CreateCategory> {
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Name cannot be empty';
+                                  } else if (categories.contains(value)) {
+                                    return 'Category already exists';
                                   } else {
                                     return null;
                                   }
@@ -127,7 +137,10 @@ class _CreateCategoryState extends State<CreateCategory> {
                                 "Monthly Limit",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: ResponsiveWidget.isSmallScreen(context)?width / 20:width/70,
+                                  fontSize:
+                                      ResponsiveWidget.isSmallScreen(context)
+                                          ? width / 20
+                                          : width / 70,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -176,44 +189,52 @@ class _CreateCategoryState extends State<CreateCategory> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   color: Color(0xff083EF6),
-                                  height: ResponsiveWidget.isSmallScreen(context)?60:50,
+                                  height:
+                                      ResponsiveWidget.isSmallScreen(context)
+                                          ? 60
+                                          : 50,
                                   onPressed: () async {
                                     if (formKey.currentState.validate()) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            content: Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            ),
-                                          );
-                                        },
-                                      );
                                       Category category = new Category(
                                         name: nameController.text,
                                         monthlyLimit:
                                             double.parse(amountController.text),
                                         users: chosenUsers,
                                       );
-                                      await databaseService
-                                          .addCategoryData(category);
-                                      Navigator.pop(context);
-                                      Navigator.pushReplacement(
+                                      Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => Confirmation(text: 'Category',),
+                                          builder: (context) => SetLimits(
+                                            category: category,
+                                          ),
                                         ),
                                       );
                                     }
                                   },
-                                  child: Text(
-                                    "Add Category",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: ResponsiveWidget.isSmallScreen(context)?width / 20:width/60,
-                                    ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Set Limits",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize:
+                                              ResponsiveWidget.isSmallScreen(
+                                                      context)
+                                                  ? width / 20
+                                                  : width / 60,
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.arrow_forward,
+                                        color: Colors.white,
+                                        size: ResponsiveWidget.isSmallScreen(
+                                                context)
+                                            ? width / 15
+                                            : width / 45,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -247,7 +268,9 @@ class _CreateCategoryState extends State<CreateCategory> {
           "User",
           style: TextStyle(
             color: Colors.black,
-            fontSize: ResponsiveWidget.isSmallScreen(context)?width/20:width/70,
+            fontSize: ResponsiveWidget.isSmallScreen(context)
+                ? width / 20
+                : width / 70,
             fontWeight: FontWeight.bold,
           ),
         ),

@@ -46,7 +46,9 @@ class Expense {
       this.comments});
   Expense.fromMap(Map data) {
     id = data['id'];
-    amount = data['Amount'];
+    amount = data['Amount'].runtimeType == int
+        ? data['Amount'].toDouble()
+        : data['Amount'];
     description = data['Description'];
     category = data['Category'];
     tags = data['Tags'];
@@ -71,19 +73,34 @@ class Category {
   List users;
   List expenses;
   double monthlyLimit;
+  int totalLimits;
+  List<List<String>> limitUsers;
+  List<int> limits;
+  List<String> limitNames;
   Category({
     this.name,
     this.users,
     this.expenses,
     this.monthlyLimit,
     this.totalExpenses,
+    this.totalLimits,
+    this.limits,
+    this.limitUsers,
+    this.limitNames,
   });
   Category.fromMap(Map<String, dynamic> data) {
     totalExpenses = data['Total Expenses'];
     expenses = data['Expenses'];
     monthlyLimit = data['Monthly limit'];
+    totalLimits = data['Total limits'];
     name = data['Name'];
     users = data['Users'];
+    limitNames = List<String>.from(data['Limits']);
+    limitUsers = new List<List<String>>();
+    for (var i = 0; i < limitNames.length; i++) {
+      limitUsers.add(new List<String>());
+      limitUsers[i].addAll(List<String>.from(data[limitNames[i]]));
+    }
   }
 }
 

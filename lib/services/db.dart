@@ -145,13 +145,20 @@ class DatabaseService {
         },
       );
     }
+
+    Map<String, dynamic> map = {
+      'Name': category.name,
+      'Users': category.users,
+      'Monthly limit': category.monthlyLimit,
+      'Total Expenses': 0,
+      'Total limits': category.totalLimits,
+      'Limits': category.limitNames,
+    };
+    for (var i = 0; i < category.limitNames.length; i++) {
+      map[category.limitNames[i]] = category.limitUsers[i];
+    }
     return await docref.set(
-      {
-        'Name': category.name,
-        'Users': category.users,
-        'Monthly limit': category.monthlyLimit,
-        'Total Expenses': 0,
-      },
+      map,
       SetOptions(merge: true),
     );
   }
@@ -202,7 +209,8 @@ class DatabaseService {
       'Comments': FieldValue.arrayUnion([map]),
     });
     Category temp = await readCategory(expense.category);
-    await userRef.doc(temp.users.first).update({
+
+    await userRef.doc(temp.limitUsers.first.first).update({
       'Expenses': FieldValue.arrayUnion([expense.id]),
     });
     return expense.id;
@@ -224,7 +232,7 @@ class DatabaseService {
       'Comments': FieldValue.arrayUnion([map]),
     });
     Category temp = await readCategory(expense.category);
-    await userRef.doc(temp.users.first).update({
+    await userRef.doc(temp.limitUsers.first.first).update({
       'Expenses': FieldValue.arrayUnion([ref.id]),
     });
     return ref.id;
@@ -260,86 +268,118 @@ class DatabaseService {
     });
   }
 
+  findLimit(double amt, List<String> limits) {
+    for (var limit in limits) {
+      if (double.parse(limit.split(' ').first) < amt &&
+          double.parse(limit.split(' ').last) > amt) {
+        return limit;
+      }
+    }
+  }
+
   Future<void> approveExpense(Expense expense, String comment) async {
-    DocumentSnapshot snap = await categoryRef.doc(expense.category).get();
-    List users = snap.data()['Users'];
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    int index = users.indexOf(pref.getString('Id'));
-    await userRef.doc(users[index]).update({
+    String userId = await getUserId();
+    await userRef.doc(userId).update({
       //Remove from current user
       'Expenses': FieldValue.arrayRemove([expense.id])
     });
-    if (index != users.indexOf(users.last)) {
-      //Send to next user
-      await userRef.doc(users[index + 1]).update({
-        'Expenses': FieldValue.arrayUnion([expense.id])
-      });
-    }
-    // Send to checker
-    else {
-      // QuerySnapshot snap =
-      //     await userRef.where('Employee role', isEqualTo: 'Checker').get();
-      // await snap.docs.first.reference.update({
-      //   'Expenses': FieldValue.arrayUnion([expense.id])
-      // });
-      final snap = await categoryRef.doc(expense.category).get();
-      int total = snap.data()['Total Expenses'] + 1;
-      // String cat = expense.category.
-      total += 1000;
-      String id = '${expense.category.substring(0, 3)}' + total.toString();
-      Map map = {id: expense.id};
-      try {
+    Category temp = await readCategory(expense.category);
+    String limit = findLimit(expense.amount, temp.limitNames);
+    int x = temp.limitNames.indexOf(limit);
+
+    if (temp.limitUsers[x].contains(userId)) {
+      //Currently in the right limit
+      if (userId == temp.limitUsers[x].last) {
+        int total = temp.totalExpenses + 1;
+        // String cat = expense.category.
+        total += 1000;
+        String id = '${expense.category.substring(0, 3)}' + total.toString();
+        Map map = {id: expense.id};
+        try {
+          await FirebaseFirestore.instance
+              .collection('Approved')
+              .doc(expense.category)
+              .update(
+            {
+              'Expenses': FieldValue.arrayUnion(
+                [map],
+              ),
+            },
+          );
+        } catch (e) {
+          await FirebaseFirestore.instance
+              .collection('Approved')
+              .doc(expense.category)
+              .set(
+            {
+              'Expenses': FieldValue.arrayUnion(
+                [map],
+              ),
+            },
+          );
+        }
         await FirebaseFirestore.instance
-            .collection('Approved')
+            .collection('categories')
             .doc(expense.category)
-            .update(
-          {
-            'Expenses': FieldValue.arrayUnion(
-              [map],
-            ),
-          },
-        );
-      } catch (e) {
-        await FirebaseFirestore.instance
-            .collection('Approved')
-            .doc(expense.category)
-            .set(
-          {
-            'Expenses': FieldValue.arrayUnion(
-              [map],
-            ),
-          },
-        );
+            .update({
+          'Total Expenses': FieldValue.increment(1),
+        });
+      } else {
+        int index = temp.limitUsers[x].indexOf(userId);
+        await userRef.doc(temp.limitUsers[x][index + 1]).update({
+          'Expenses': FieldValue.arrayUnion([expense.id])
+        });
       }
-      await FirebaseFirestore.instance
-          .collection('categories')
-          .doc(expense.category)
-          .update({
-        'Total Expenses': FieldValue.increment(1),
-      });
+    } else {
+      //In limit below the actual limit
+      for (var i = x - 1; i >= 0; i--) {
+        if (temp.limitUsers[i].contains(userId)) {
+          if (temp.limitUsers[i].last == userId) {
+            String next = temp.limitUsers[i + 1].first;
+            await userRef.doc(next).update({
+              'Expenses': FieldValue.arrayUnion([expense.id])
+            });
+          } else {
+            int index = temp.limitUsers[i].indexOf(userId);
+            await userRef.doc(temp.limitUsers[i][index + 1]).update({
+              'Expenses': FieldValue.arrayUnion([expense.id])
+            });
+          }
+          break;
+        }
+      }
     }
     await addComment(comment, expense.id);
   }
 
   Future<void> rejectExpense(Expense expense, String comment) async {
-    DocumentSnapshot snap = await categoryRef.doc(expense.category).get();
-    List users = snap.data()['Users'];
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    int index = users.indexOf(pref.getString('Id'));
-    await userRef.doc(users[index]).update({
+    String userId = await getUserId();
+    await userRef.doc(userId).update({
       //Remove from current user
-      'Expenses': FieldValue.arrayRemove([expense.id]),
+      'Expenses': FieldValue.arrayRemove([expense.id])
     });
-    if (index != users.indexOf(users.first)) {
-      //Send to previous person
-      await userRef.doc(users[index - 1]).update({
-        'Expenses': FieldValue.arrayUnion([expense.id])
-      });
-    } else {
-      //Send back to creator
+    Category temp = await readCategory(expense.category);
+    String limit = findLimit(expense.amount, temp.limitNames);
+    int x = temp.limitNames.indexOf(limit);
+
+    if (x == 0 && userId == temp.limitUsers[x].first) { //For sending back to creator
       await userRef.doc(expense.creatorId).update({
         'Expenses': FieldValue.arrayUnion([expense.id])
       });
+    } else if (temp.limitUsers[x].first == userId) {  //For sending to the previous limit's last user
+      await userRef.doc(temp.limitUsers[x - 1].last).update({
+        'Expenses': FieldValue.arrayUnion([expense.id])
+      });
+    } else {    //For sending to previous user
+      for (var i = x - 1; i >= 0; i--) {
+        if (temp.limitUsers[i].contains(userId)) {
+          int index = temp.limitUsers[i].indexOf(userId);
+          await userRef.doc(temp.limitUsers[i][index-1]).update({
+            'Expenses': FieldValue.arrayUnion([expense.id])
+          });
+          break;
+        }
+      }
     }
     await addComment(comment, expense.id);
   }

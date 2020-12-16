@@ -27,37 +27,6 @@ class _AdminHomepageState extends State<AdminHomepage> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       key: _scaffoldKey,
-      // bottomNavigationBar: Container(
-      //   height: height / 4.5,
-      //   child: Padding(
-      //     padding: const EdgeInsets.all(16.0),
-      //     child: ListView(
-      //       children: [
-      //         CategoryCards(
-      //           height: height,
-      //           width: width,
-      //           color: Colors.redAccent,
-      //           date: "28/Nov/2020",
-      //           category: "Carpentry",
-      //           name: "Arunava Sandhu",
-      //           price: "₹ 12500",
-      //         ),
-      //         SizedBox(
-      //           height: 20,
-      //         ),
-      //         CategoryCards(
-      //           height: height,
-      //           width: width,
-      //           color: Colors.green,
-      //           date: "28/Nov/2020",
-      //           category: "Carpentry",
-      //           name: "Arunava Sandhu",
-      //           price: "₹ 12500",
-      //         )
-      //       ],
-      //     ),
-      //   ),
-      // ),
       drawer: commonDrawer(context),
       body: FutureBuilder<String>(
           future: isLoaded ? null : dbService.getUserName(),
@@ -105,14 +74,16 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                   ),
                                 ),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Good ${currTime > 5 && currTime < 15 ? 'Morning' : 'Evening'},",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize:
-                                            ResponsiveWidget.isSmallScreen(context)
+                                            ResponsiveWidget.isSmallScreen(
+                                                    context)
                                                 ? width / 14
                                                 : width / 50,
                                         fontWeight: FontWeight.bold,
@@ -146,16 +117,16 @@ class _AdminHomepageState extends State<AdminHomepage> {
                         ),
                         ResponsiveWidget.isSmallScreen(context)
                             ? Padding(
-                              padding: const EdgeInsets.only(top:158.0),
-                              child: Column(
+                                padding: const EdgeInsets.only(top: 158.0),
+                                child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(
-                                        height:
-                                            ResponsiveWidget.isSmallScreen(context)
-                                                ? height / 6
-                                                : height / 5),
+                                        height: ResponsiveWidget.isSmallScreen(
+                                                context)
+                                            ? height / 6
+                                            : height / 5),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
@@ -175,7 +146,8 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                       ],
                                     ),
                                     SizedBox(
-                                      height: ResponsiveWidget.isSmallScreen(context)
+                                      height: ResponsiveWidget.isSmallScreen(
+                                              context)
                                           ? (width - 300) / 10
                                           : width / 25,
                                     ),
@@ -189,18 +161,16 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                           iconData: FlutterIcons.people_mdi,
                                           nextScreen: AssignUsers(),
                                         ),
-                                        SizedBox(
-                                          width: 150,
-                                        )
                                       ],
                                     ),
                                   ],
                                 ),
-                            )
+                              )
                             : Padding(
                                 padding: const EdgeInsets.only(top: 250.0),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     PositionedCards(
                                       text1: "Create",
@@ -214,52 +184,11 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                       iconData: FlutterIcons.tag_mco,
                                       nextScreen: CreateTag(),
                                     ),
-                                    PositionedCards(
-                                      text1: "Assign",
-                                      text2: "Users",
-                                      iconData: FlutterIcons.people_mdi,
-                                      nextScreen: AssignUsers(),
-                                    ),
                                   ],
                                 ),
                               ),
-
-                        // Positioned(
-                        //   top: height / 1.35,
-                        //   left: width / 12,
-                        //   child: Text(
-                        //     "Categories",
-                        //     style: TextStyle(
-                        //       fontWeight: FontWeight.bold,
-                        //       fontSize: 25,
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top:68.0),
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: GestureDetector(
-                          onTap: (){},
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color:Color(0xff083EF6),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            width: width/4,
-
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text("Change Priorities",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w400),),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
                   ],
                 ),
               );
