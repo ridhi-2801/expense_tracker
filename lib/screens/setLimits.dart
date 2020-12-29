@@ -304,14 +304,14 @@ class _SetLimitsState extends State<SetLimits> {
                                           );
                                         },
                                       );
+                                      print(limits.length);
                                       List<String> list = [];
                                       for (var index = 0;
-                                          index <= category.limits.length;
+                                          index <= limits.length;
                                           index++) {
                                         String temp;
                                         if (index == 0) {
-                                          temp =
-                                              '0 - ${limits[index]}';
+                                          temp = '0 - ${limits[index]}';
                                         } else {
                                           temp =
                                               '${limits[index - 1]} - ${index == totalLimits ? category.monthlyLimit.toInt() : limits[index]}';
